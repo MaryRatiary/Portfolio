@@ -75,10 +75,10 @@ const Hero = () => {
             </motion.div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-beige-50 to-emerald-200 bg-clip-text text-transparent">
-              Je suis, <br />
+            Bonjour, je suis<br />
               
               <span className="text-emerald-300">Ratiarivony </span>
-               Mario Mamitantely
+               <span className="text-emerald-200">Mario Mamitantely</span>
             </h1>
 
             <p className="text-amber-100 text-lg md:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-8">
@@ -217,19 +217,19 @@ const Hero = () => {
                   <img
                     src="/moi2.png"
                     alt="Mario Ratiarivony"
-                    className="w-full h-full object-cover"
+                    className="w-full h-80% object-cover"
                   />
                 </div>
               </div>
               <img
                 src="/moi2.png"
                 alt="Mario Ratiarivony"
-                className="hidden lg:block relative z-10 w-full h-full object-cover"
+                className="hidden lg:block lg:pt-5 relative z-10 w-full h-80% top-4 object-cover "
                 style={{
-                  WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
-                  maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
-                  WebkitMaskSize: '100% 100%',
-                  maskSize: '100% 100%',
+                  WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                  maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)',
+                  WebkitMaskSize: '100% 95%',
+                  maskSize: '100% 95%',
                   WebkitMaskRepeat: 'no-repeat',
                   maskRepeat: 'no-repeat',
                 }}

@@ -48,7 +48,7 @@ const Projects = () => {
   };
 
   return (
-    <div id="projects" className="min-h-screen bg-neutral-900 py-20 px-4">
+    <div id="projects" className="min-h-screen bg-gradient-to-b from-black to-emerald-950 py-20 px-4">
       <motion.div 
         className="max-w-7xl mx-auto"
         initial={{ opacity: 0 }}
