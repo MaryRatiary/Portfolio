@@ -63,7 +63,7 @@ const Hero = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="w-full max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center justify-between gap-8 lg:gap-12 py-28"
+          className="w-full max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center justify-between gap-8 lg:gap-12 py-2"
         >
           {/* Texte à gauche */}
           <motion.div 
@@ -215,16 +215,16 @@ const Hero = () => {
               <div className="lg:hidden mb-8 flex justify-center">
                 <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-emerald-500/30 shadow-lg shadow-emerald-500/20">
                   <img
-                    src="/moi2.png"
+                    src="/me.png"
                     alt="Mario Ratiarivony"
                     className="w-full h-80% object-cover"
                   />
                 </div>
               </div>
               <img
-                src="/moi2.png"
+                src="/me.png"
                 alt="Mario Ratiarivony"
-                className="hidden lg:block lg:pt-5 relative z-10 w-full h-80% top-4 object-cover "
+                className="hidden lg:block lg:pt-5 relative z-10 w-full h-100% top-2 object-cover "
                 style={{
                   WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
                   maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)',

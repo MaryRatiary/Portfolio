@@ -12,7 +12,6 @@ function App() {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
-    // Simulation d'un chargement initial
     setTimeout(() => setIsLoading(false), 2000);
   }, []);
 
@@ -23,7 +22,6 @@ function App() {
     { id: 'contact', label: 'Contact' }
   ];
 
-  // Animation de chargement
   if (isLoading) {
     return (
       <div className="h-screen bg-black flex items-center justify-center">
@@ -38,7 +36,7 @@ function App() {
             ease: "easeInOut",
             repeat: Infinity
           }}
-          className="w-12 h-12 text-emerald-200"
+          className="w-12 h-12 bg-emerald-200"
         />
       </div>
     );
@@ -46,50 +44,60 @@ function App() {
 
   return (
     <div className="bg-black min-h-screen">
-      {/* Navigation fixe */}
-      <nav className="fixed top-0 left-0 w-full z-50 nav-blur transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-center h-16">
-            <div className="flex space-x-8">
+      {/* NAVIGATION FUTURISTE RESPONSIVE */}
+      <nav className="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-emerald-500/20 shadow-[0_0_15px_rgba(0,255,170,0.3)]">
+        <div className="max-w-7xl mx-auto sm:px-4 lg:px-8">
+          <div className="flex justify-center items-center h-14 sm:h-16 overflow-x-auto no-scrollbar">
+            <div className="flex gap-3 sm:gap-6 md:gap-10 whitespace-nowrap relative">
+
               {navItems.map((item) => (
                 <motion.button
                   key={item.id}
                   onClick={() => setActiveSection(item.id)}
-                  className={`text-white px-3 py-2 text-sm font-medium relative ${
-                    activeSection === item.id ? 'text-emerald-500' : ''
+                  className={`relative px-2 sm:px-3 md:px-4 py-1 text-xs sm:text-sm md:text-base lg:text-lg font-semibold tracking-wide transition-colors duration-300 ${
+                    activeSection === item.id
+                      ? 'text-emerald-400 drop-shadow-[0_0_10px_rgba(0,255,170,0.8)]'
+                      : 'text-gray-300 hover:text-cyan-400'
                   }`}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   {item.label}
+
+                  {/* Soulignement animé futuriste */}
                   {activeSection === item.id && (
                     <motion.div
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-emerald-500"
+                      className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-500 shadow-[0_0_8px_rgba(0,255,170,0.8)]"
                       layoutId="underline"
+                      transition={{ type: "spring", stiffness: 200, damping: 25 }}
                     />
                   )}
                 </motion.button>
               ))}
+
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Contenu principal avec transitions */}
-      <AnimatePresence mode="wait">
-        <motion.main
-          key={activeSection}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-        >
-          {activeSection === 'home' && <Hero />}
-          {activeSection === 'about' && <Skills />}
-          {activeSection === 'projects' && <Projects />}
-          {activeSection === 'contact' && <Contact />}
-        </motion.main>
-      </AnimatePresence>
+      {/* CONTENU PRINCIPAL */}
+      <div className="pt-1 sm:pt-2">
+        <AnimatePresence mode="wait">
+          <motion.main
+            key={activeSection}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+          >
+            {activeSection === 'home' && <Hero />}
+            {activeSection === 'about' && <Skills />}
+            {activeSection === 'projects' && <Projects />}
+            {activeSection === 'contact' && <Contact />}
+          </motion.main>
+        </AnimatePresence>
+      </div>
+
       <Footer />
     </div>
   );
