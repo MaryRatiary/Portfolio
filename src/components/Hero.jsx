@@ -68,7 +68,7 @@ const Hero = () => {
           {/* Texte à gauche */}
           <motion.div 
             variants={itemVariants}
-            className="flex-1 text-center lg:text-left"
+            className="flex-1 text-center lg:text-left mt-[100px]"
           >
             <motion.div className="inline-block mb-6 px-4 py-2 rounded-full bg-emerald-500/20 backdrop-blur-sm">
               <span className="text-emerald-200 font-medium">👋 Bienvenue sur mon portfolio</span>
