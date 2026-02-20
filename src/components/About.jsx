@@ -23,7 +23,7 @@ const About = () => {
   ];
 
   return (
-    <div ref={ref} className="min-h-screen bg-black py-20 px-4 relative overflow-hidden">
+    <div ref={ref} className="min-h-screen bg-black py-12 md:py-20 px-4 md:px-6 relative overflow-hidden">
       {/* Cercles décoratifs animés */}
       <div className="absolute inset-0">
         {[...Array(3)].map((_, i) => (
@@ -56,7 +56,7 @@ const About = () => {
         style={{ y, opacity }}
       >
         <motion.h2 
-          className="text-4xl font-bold text-center text-white mb-12"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-white mb-8 md:mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -65,23 +65,23 @@ const About = () => {
         </motion.h2>
 
         <motion.div 
-          className="bg-gray-900 rounded-2xl p-8 backdrop-blur-lg bg-opacity-50 shadow-xl"
+          className="bg-gray-900 rounded-xl md:rounded-2xl p-6 md:p-8 backdrop-blur-lg bg-opacity-50 shadow-xl"
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+          <p className="text-gray-300 text-base md:text-lg mb-6 md:mb-8 leading-relaxed">
             Je suis un développeur passionné par la création d'expériences web innovantes et interactives. 
             Avec une solide expérience en développement front-end et une curiosité constante pour les nouvelles technologies, 
             je m'efforce de créer des solutions élégantes et performantes.
           </p>
 
-          <h3 className="text-2xl font-bold text-white mb-6">Compétences</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Compétences</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-4">
             {skills.map((skill, index) => (
               <motion.div
                 key={index}
-                className="text-emerald-200 rounded-lg p-3 text-center text-white font-medium"
+                className="text-emerald-200 rounded-lg p-2 md:p-3 text-center text-white font-medium text-xs md:text-sm"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
