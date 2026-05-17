@@ -5,7 +5,8 @@
    Design system: cream, ink, rust. Serif display, mono labels, sans body.
    ========================================================================= */
 
-:root {
+:root,
+:root[data-theme="light"] {
   --bg: #F5F1EB;
   --bg-2: #EDE6D8;
   --ink: #1A1612;
@@ -14,7 +15,22 @@
   --hairline: #D9D2C4;
   --rust: #B5471E;
   --rust-2: #8A3614;
+  --shadow: 26, 22, 18;
+}
 
+:root[data-theme="dark"] {
+  --bg: #14110D;
+  --bg-2: #1F1A14;
+  --ink: #F2EBDC;
+  --ink-2: #CDC2AF;
+  --muted: #847864;
+  --hairline: #2E2820;
+  --rust: #DC7C4A;
+  --rust-2: #B5471E;
+  --shadow: 0, 0, 0;
+}
+
+:root {
   --font-display: "Instrument Serif", "Times New Roman", serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -23,6 +39,16 @@
   --gutter: clamp(20px, 4vw, 56px);
 
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Smooth color transitions when switching theme */
+html, body, .nav, .stack-card, .contact-form, .work-row,
+.contact-list a, .contact-list div, .btn, .lang-toggle, .theme-toggle,
+.portrait, .portrait-caption, .work-preview, .mobile-drawer,
+.field input, .field textarea {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.4s;
+  transition-timing-function: var(--ease);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,8 +72,8 @@ html, body {
 
 body {
   background:
-    radial-gradient(1200px 600px at 80% -10%, rgba(181, 71, 30, 0.05), transparent 60%),
-    radial-gradient(900px 500px at -10% 60%, rgba(122, 110, 95, 0.06), transparent 60%),
+    radial-gradient(1200px 600px at 80% -10%, color-mix(in srgb, var(--rust) 8%, transparent), transparent 60%),
+    radial-gradient(900px 500px at -10% 60%, color-mix(in srgb, var(--muted) 10%, transparent), transparent 60%),
     var(--bg);
   background-attachment: fixed;
 }
@@ -262,7 +288,7 @@ img { max-width: 100%; display: block; }
   border-radius: 4px;
   overflow: hidden;
   transform: rotate(-1.2deg);
-  box-shadow: 0 30px 60px -30px rgba(26, 22, 18, 0.25);
+  box-shadow: 0 30px 60px -30px rgba(var(--shadow), 0.25);
 }
 .portrait img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.02) saturate(0.95); }
 
@@ -407,7 +433,7 @@ img { max-width: 100%; display: block; }
   overflow: hidden;
   background: var(--bg-2);
   border: 1px solid var(--hairline);
-  box-shadow: 0 30px 60px -20px rgba(26, 22, 18, 0.35);
+  box-shadow: 0 30px 60px -20px rgba(var(--shadow), 0.35);
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.9);
   transition: opacity 0.3s var(--ease), transform 0.4s var(--ease);
@@ -705,15 +731,84 @@ img { max-width: 100%; display: block; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 
 /* ---------- Mobile nav drawer ---------- */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .nav-tools { gap: 8px; }
+  .lang-toggle button { padding: 4px 8px; font-size: 9px; }
+  .theme-toggle, .nav-toggle { width: 30px; height: 30px; }
+}
+
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  background: transparent;
+}
+.lang-toggle button {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: var(--ink-2);
+  transition: all 0.3s var(--ease);
+  line-height: 1;
+}
+.lang-toggle button.on {
+  background: var(--ink);
+  color: var(--bg);
+}
+.lang-toggle button:not(.on):hover { color: var(--ink); }
+
+.theme-toggle {
+  width: 32px; height: 32px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  transition: all 0.4s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.theme-toggle:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+.theme-toggle svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.5s var(--ease);
+}
+.theme-toggle:hover svg { transform: rotate(45deg); }
+
 .nav-toggle {
   display: none;
-  width: 36px; height: 36px;
+  width: 32px; height: 32px;
   border: 1px solid var(--ink);
   border-radius: 999px;
   align-items: center; justify-content: center;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
+  color: var(--ink);
+  transition: all 0.3s var(--ease);
 }
+.nav-toggle:hover { background: var(--ink); color: var(--bg); }
 /* ---------- Mobile drawer (rendered outside .nav to escape backdrop-filter containing block) ---------- */
 .mobile-drawer {
   display: none;

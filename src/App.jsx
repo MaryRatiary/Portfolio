@@ -2,6 +2,149 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import './App.css';
 
+/* ============================================================
+   i18n DICTIONARIES
+   ============================================================ */
+
+const I18N = {
+  fr: {
+    nav: { work: 'Projets', practice: 'Expertise', contact: 'Contact', hire: 'Travailler →' },
+    eyebrowHero: 'Antananarivo, Madagascar · Disponible',
+    hero: {
+      sub: (<><em>Développeur</em> &amp; artisan du numérique.</>),
+      lede: (
+        <>
+          Je conçois des interfaces premium, des systèmes
+          <em> automatisés </em>N8N et des backends solides en Nest,
+          Django ou C#. Vingt ans, basé à Madagascar, disponible pour
+          collaborer ailleurs.
+        </>
+      ),
+      ctaWork: 'Voir les projets',
+      ctaContact: 'Me contacter',
+    },
+    meta: {
+      shipped: 'Projets livrés',
+      stacks: 'Outils maîtrisés',
+      langs: 'Langues parlées',
+      years: 'Ans jeune',
+    },
+    work: {
+      eyebrow: 'Projets sélectionnés',
+      title: (<>Ce que j&apos;ai <em>livré</em>.</>),
+    },
+    practice: {
+      eyebrow: 'Expertise · stack',
+      title: (<>Une boîte à outils pour <em>livrer en solo</em>.</>),
+    },
+    groupLabels: {
+      Frontend: '01 — Interfaces',
+      Backend: '02 — Systèmes',
+      Automation: '03 — Flux',
+      Craft: '04 — Visuel',
+    },
+    langsLabel: 'Langues parlées',
+    langNames: { Français: 'Français', Anglais: 'Anglais', Allemand: 'Allemand' },
+    contact: {
+      eyebrow: 'Contact',
+      title: (<>Construisons quelque chose <em>qui mérite d&apos;exister.</em></>),
+      body:
+        "Un projet web, mobile, backend ou un workflow d'automatisation à construire ? Écris-moi — je réponds rapidement et propose une approche claire avant tout devis.",
+      formTitle: 'Envoyer un brief.',
+      formMeta: 'NOUVEAU · MESSAGE',
+      fieldName: 'Nom',
+      fieldEmail: 'Email',
+      fieldMessage: 'Message',
+      placeholderName: 'Votre nom',
+      placeholderEmail: 'votre@email.com',
+      placeholderMessage: 'Parlez-moi de votre projet…',
+      send: 'Envoyer',
+    },
+    contactLabels: { email: 'Email', phone: 'Téléphone', linkedin: 'LinkedIn', github: 'GitHub', facebook: 'Facebook' },
+    footer: { tagline: '© 2026 — Conçu à Antananarivo' },
+    projects: {
+      luxy: { title: 'Luxy Shop', tagline: 'Boutique e-commerce premium — produits lifestyle haut de gamme.' },
+      kpop: { title: 'K-Pop Shop', tagline: 'Boutique en ligne dédiée à la culture K-Pop : merch, albums, lightsticks.' },
+      scaleas: { title: 'Scaleas', tagline: 'Plateforme e-commerce scalable avec architecture modulaire.' },
+      nexus: { title: 'Nexus Lab', tagline: 'Plateforme de digitalisation futuriste avec intégration 3D Three.js.' },
+      allstone: { title: 'All Stone Mada', tagline: 'E-commerce de pierres précieuses, Madagascar.' },
+      aveny: { title: 'Aveny Work', tagline: 'Plateforme IA avec suggestions business et dashboard dynamique.' },
+      ratiary: { title: 'Ratiary Business', tagline: 'Site multi-services optimisé SEO.' },
+      rise: { title: 'Rise Platform', tagline: 'Réseau social étudiant temps réel, publications & messages.' },
+    },
+  },
+  en: {
+    nav: { work: 'Work', practice: 'Practice', contact: 'Contact', hire: 'Hire →' },
+    eyebrowHero: 'Antananarivo, Madagascar · Open for work',
+    hero: {
+      sub: (<><em>Developer</em> &amp; digital craftsman.</>),
+      lede: (
+        <>
+          I craft premium interfaces,
+          <em> automated </em>N8N systems and solid backends with Nest,
+          Django or C#. Twenty years young, based in Madagascar, open to
+          collaborate anywhere.
+        </>
+      ),
+      ctaWork: 'Selected work',
+      ctaContact: 'Get in touch',
+    },
+    meta: {
+      shipped: 'Shipped projects',
+      stacks: 'Stacks mastered',
+      langs: 'Spoken languages',
+      years: 'Years young',
+    },
+    work: {
+      eyebrow: 'Selected work',
+      title: (<>Things I&apos;ve <em>shipped</em>.</>),
+    },
+    practice: {
+      eyebrow: 'Practice · stack',
+      title: (<>A toolbox built for <em>solo shipping</em>.</>),
+    },
+    groupLabels: {
+      Frontend: '01 — Interfaces',
+      Backend: '02 — Systems',
+      Automation: '03 — Flows',
+      Craft: '04 — Visual',
+    },
+    langsLabel: 'Spoken languages',
+    langNames: { Français: 'French', Anglais: 'English', Allemand: 'German' },
+    contact: {
+      eyebrow: 'Contact',
+      title: (<>Let&apos;s build something <em>worth shipping.</em></>),
+      body:
+        "Got a web, mobile, backend or automation project to ship? Drop me a line — I answer quickly and lay out a clear approach before any quote.",
+      formTitle: 'Send a brief.',
+      formMeta: 'NEW · MESSAGE',
+      fieldName: 'Name',
+      fieldEmail: 'Email',
+      fieldMessage: 'Message',
+      placeholderName: 'Your name',
+      placeholderEmail: 'your@email.com',
+      placeholderMessage: 'Tell me about your project…',
+      send: 'Send',
+    },
+    contactLabels: { email: 'Email', phone: 'Phone', linkedin: 'LinkedIn', github: 'GitHub', facebook: 'Facebook' },
+    footer: { tagline: '© 2026 — Crafted in Antananarivo' },
+    projects: {
+      luxy: { title: 'Luxy Shop', tagline: 'Premium lifestyle e-commerce boutique.' },
+      kpop: { title: 'K-Pop Shop', tagline: 'Online store dedicated to K-Pop culture — merch, albums, lightsticks.' },
+      scaleas: { title: 'Scaleas', tagline: 'Scalable e-commerce platform with modular architecture.' },
+      nexus: { title: 'Nexus Lab', tagline: 'Futuristic digitalization platform with Three.js 3D integration.' },
+      allstone: { title: 'All Stone Mada', tagline: 'Precious stones e-commerce, Madagascar.' },
+      aveny: { title: 'Aveny Work', tagline: 'AI platform with business suggestions and dynamic dashboard.' },
+      ratiary: { title: 'Ratiary Business', tagline: 'SEO-optimized multi-services site.' },
+      rise: { title: 'Rise Platform', tagline: 'Real-time student social network — posts and messages.' },
+    },
+  },
+};
+
+/* ============================================================
+   ANIMATION VARIANTS
+   ============================================================ */
+
 const wordVariants = {
   hidden: { y: '115%' },
   visible: (i) => ({
@@ -10,10 +153,14 @@ const wordVariants = {
   }),
 };
 
+/* ============================================================
+   DATA (locale-independent)
+   ============================================================ */
+
 const navItems = [
-  { id: 'work', label: 'Work' },
-  { id: 'practice', label: 'Practice' },
-  { id: 'contact', label: 'Contact' },
+  { id: 'work', tk: 'work' },
+  { id: 'practice', tk: 'practice' },
+  { id: 'contact', tk: 'contact' },
 ];
 
 const skills = [
@@ -37,94 +184,24 @@ const skills = [
 ];
 
 const groupOrder = ['Frontend', 'Backend', 'Automation', 'Craft'];
-const groupLabels = {
-  Frontend: '01 — Interfaces',
-  Backend: '02 — Systems',
-  Automation: '03 — Flows',
-  Craft: '04 — Visual',
-};
 
 const projects = [
-  {
-    title: 'Luxy Shop',
-    tagline: 'Boutique e-commerce premium — produits lifestyle haut de gamme.',
-    url: 'https://luxyshop.netlify.app',
-    tech: 'React · Tailwind · E-Commerce',
-    year: '2026',
-    category: 'Luxury E-Commerce',
-    image: '/luxury.png',
-  },
-  {
-    title: 'K-Pop Shop',
-    tagline: 'Boutique en ligne dédiée à la culture K-Pop : merch, albums, lightsticks.',
-    url: 'https://kpopshop.netlify.app',
-    tech: 'React · Tailwind · Stripe',
-    year: '2026',
-    category: 'Niche E-Commerce',
-    image: '/kpopshop.netlify.png',
-  },
-  {
-    title: 'Scaleas',
-    tagline: 'Plateforme e-commerce scalable avec architecture modulaire.',
-    url: 'https://scaleas-e.netlify.app',
-    tech: 'React · Node · Scalable',
-    year: '2026',
-    category: 'E-Commerce Platform',
-    image: '/scale.png',
-  },
-  {
-    title: 'Nexus Lab',
-    tagline: 'Plateforme de digitalisation futuriste avec intégration 3D Three.js.',
-    url: 'https://nexuslaab.netlify.app',
-    tech: 'React · Three.js · Tailwind',
-    year: '2025',
-    category: '3D Integration',
-    image: '/nexuslaab.png',
-  },
-  {
-    title: 'All Stone Mada',
-    tagline: 'E-commerce de pierres précieuses, Madagascar.',
-    url: 'https://allstonemada.netlify.app',
-    tech: 'React · C# · ASP.Net',
-    year: '2024',
-    category: 'E-Commerce',
-    image: '/allstoneof mada.png',
-  },
-  {
-    title: 'Aveny Work',
-    tagline: 'Plateforme IA avec suggestions business et dashboard dynamique.',
-    url: 'https://avenywork.netlify.app',
-    tech: 'React · Django · ML',
-    year: '2024',
-    category: 'AI Platform',
-    image: '/avenywork.png',
-  },
-  {
-    title: 'Ratiary Business',
-    tagline: 'Site multi-services optimisé SEO.',
-    url: 'https://ratiarybusiness.netlify.app',
-    tech: 'React · Tailwind · SEO',
-    year: '2024',
-    category: 'Business',
-    image: '/ratiarybusiness.png',
-  },
-  {
-    title: 'Rise Platform',
-    tagline: 'Réseau social étudiant temps réel, publications & messages.',
-    url: 'https://riseplatform.netlify.app',
-    tech: 'React · C# · Realtime',
-    year: '2024',
-    category: 'Social Network',
-    image: '/riseplatform.png',
-  },
+  { key: 'luxy',     url: 'https://luxyshop.netlify.app',     tech: 'React · Tailwind · E-Commerce', year: '2026', category: 'Luxury E-Commerce',  image: '/luxury.png' },
+  { key: 'kpop',     url: 'https://kpopshop.netlify.app',     tech: 'React · Tailwind · Stripe',     year: '2026', category: 'Niche E-Commerce',   image: '/kpopshop.netlify.png' },
+  { key: 'scaleas',  url: 'https://scaleas-e.netlify.app',    tech: 'React · Node · Scalable',       year: '2026', category: 'E-Commerce Platform', image: '/scale.png' },
+  { key: 'nexus',    url: 'https://nexuslaab.netlify.app',    tech: 'React · Three.js · Tailwind',   year: '2025', category: '3D Integration',     image: '/nexuslaab.png' },
+  { key: 'allstone', url: 'https://allstonemada.netlify.app', tech: 'React · C# · ASP.Net',          year: '2024', category: 'E-Commerce',          image: '/allstoneof mada.png' },
+  { key: 'aveny',    url: 'https://avenywork.netlify.app',    tech: 'React · Django · ML',           year: '2024', category: 'AI Platform',         image: '/avenywork.png' },
+  { key: 'ratiary',  url: 'https://ratiarybusiness.netlify.app', tech: 'React · Tailwind · SEO',    year: '2024', category: 'Business',           image: '/ratiarybusiness.png' },
+  { key: 'rise',     url: 'https://riseplatform.netlify.app', tech: 'React · C# · Realtime',         year: '2024', category: 'Social Network',     image: '/riseplatform.png' },
 ];
 
-const contacts = [
-  { icon: '01', label: 'Email', value: 'maryratiary@gmail.com', href: 'mailto:maryratiary@gmail.com' },
-  { icon: '02', label: 'Téléphone', value: '+261 ** ** 0917', href: 'tel:+2610917' },
-  { icon: '03', label: 'LinkedIn', value: 'Ratiarivony Mario', href: 'https://www.linkedin.com/in/mario-mamitantely-ratiarivony/' },
-  { icon: '04', label: 'GitHub', value: 'MaryRatiary', href: 'https://github.com/MaryRatiary' },
-  { icon: '05', label: 'Facebook', value: 'Mario Ratiary', href: 'https://facebook.com/mario.ratiary' },
+const contactsBase = [
+  { code: 'email',    icon: '01', value: 'maryratiary@gmail.com', href: 'mailto:maryratiary@gmail.com' },
+  { code: 'phone',    icon: '02', value: '+261 ** ** 0917',       href: 'tel:+2610917' },
+  { code: 'linkedin', icon: '03', value: 'Ratiarivony Mario',     href: 'https://www.linkedin.com/in/mario-mamitantely-ratiarivony/' },
+  { code: 'github',   icon: '04', value: 'MaryRatiary',           href: 'https://github.com/MaryRatiary' },
+  { code: 'facebook', icon: '05', value: 'Mario Ratiary',         href: 'https://facebook.com/mario.ratiary' },
 ];
 
 const languages = [
@@ -133,11 +210,66 @@ const languages = [
   { name: 'Allemand', level: 20 },
 ];
 
+/* ============================================================
+   ICONS
+   ============================================================ */
+
+const SunIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.4 1.4M17.6 17.6l1.4 1.4M5 19l1.4-1.4M17.6 6.4L19 5" />
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+  </svg>
+);
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+
 function scrollTo(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+function getInitialLang() {
+  if (typeof window === 'undefined') return 'fr';
+  const saved = localStorage.getItem('lang');
+  if (saved === 'fr' || saved === 'en') return saved;
+  return navigator.language?.startsWith('en') ? 'en' : 'fr';
+}
+
+function getInitialTheme() {
+  if (typeof window === 'undefined') return 'light';
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light' || saved === 'dark') return saved;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+/* ============================================================
+   APP
+   ============================================================ */
+
 export default function App() {
+  const [lang, setLang] = useState(getInitialLang);
+  const [theme, setTheme] = useState(getInitialTheme);
+  const t = I18N[lang];
+
+  useEffect(() => {
+    localStorage.setItem('lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+  }, [lang]);
+
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#14110D' : '#F5F1EB');
+  }, [theme]);
+
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
 
@@ -171,6 +303,13 @@ export default function App() {
     return () => window.removeEventListener('mousemove', onMove);
   }, []);
 
+  // Close drawer on resize to desktop
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth > 720 && menuOpen) setMenuOpen(false); };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [menuOpen]);
+
   const grouped = useMemo(() => {
     return groupOrder.map((group) => ({
       group,
@@ -178,12 +317,36 @@ export default function App() {
     }));
   }, []);
 
+  const Tools = () => (
+    <div className="nav-tools">
+      <div className="lang-toggle" role="group" aria-label="Language">
+        <button
+          className={lang === 'fr' ? 'on' : ''}
+          onClick={() => setLang('fr')}
+          aria-pressed={lang === 'fr'}
+        >FR</button>
+        <button
+          className={lang === 'en' ? 'on' : ''}
+          onClick={() => setLang('en')}
+          aria-pressed={lang === 'en'}
+        >EN</button>
+      </div>
+      <button
+        className="theme-toggle"
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+      >
+        {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+      </button>
+    </div>
+  );
+
   return (
     <div className="shell">
       <motion.div className="progress" style={{ scaleX }} />
 
       <nav className={`nav container ${scrolled ? 'scrolled' : ''}`}>
-        <button className="brand" onClick={() => { scrollTo('home'); setMenuOpen(false); }} aria-label="Accueil">
+        <button className="brand" onClick={() => { scrollTo('home'); setMenuOpen(false); }} aria-label="Home">
           <span><em>M</em>ario</span>
           <small>©2026 · MG</small>
         </button>
@@ -191,34 +354,34 @@ export default function App() {
         <div className="nav-links">
           {navItems.map((item) => (
             <button key={item.id} onClick={() => scrollTo(item.id)}>
-              {item.label}
+              {t.nav[item.tk]}
             </button>
           ))}
-          <a href="mailto:maryratiary@gmail.com">Hire →</a>
+          <a href="mailto:maryratiary@gmail.com">{t.nav.hire}</a>
         </div>
 
-        <button
-          className="nav-toggle"
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-label="Menu"
-          aria-expanded={menuOpen}
-        >
-          {menuOpen ? '×' : '≡'}
-        </button>
+        <div className="nav-right">
+          <Tools />
+          <button
+            className="nav-toggle"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? '×' : '≡'}
+          </button>
+        </div>
       </nav>
 
-      {/* Mobile drawer rendered OUTSIDE the nav (backdrop-filter on nav breaks position:fixed in children) */}
-      <div
-        className={`mobile-drawer ${menuOpen ? 'open' : ''}`}
-        aria-hidden={!menuOpen}
-      >
+      {/* Mobile drawer rendered OUTSIDE the nav */}
+      <div className={`mobile-drawer ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
         {navItems.map((item) => (
           <button
             key={item.id}
             onClick={() => { scrollTo(item.id); setMenuOpen(false); }}
             tabIndex={menuOpen ? 0 : -1}
           >
-            {item.label}
+            {t.nav[item.tk]}
           </button>
         ))}
         <a
@@ -226,7 +389,7 @@ export default function App() {
           onClick={() => setMenuOpen(false)}
           tabIndex={menuOpen ? 0 : -1}
         >
-          Hire →
+          {t.nav.hire}
         </a>
       </div>
 
@@ -240,45 +403,28 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
+                key={`eyebrow-${lang}`}
               >
-                Antananarivo, Madagascar · Open for work
+                {t.eyebrowHero}
               </motion.p>
 
               <h1 className="hero-display">
                 <span className="line">
                   <span className="word-mask">
-                    <motion.span
-                      className="word"
-                      custom={0}
-                      initial="hidden"
-                      animate="visible"
-                      variants={wordVariants}
-                    >
+                    <motion.span className="word" custom={0} initial="hidden" animate="visible" variants={wordVariants}>
                       Ratiarivony
                     </motion.span>
                   </span>
                 </span>
                 <span className="line">
                   <span className="word-mask">
-                    <motion.span
-                      className="word"
-                      custom={1}
-                      initial="hidden"
-                      animate="visible"
-                      variants={wordVariants}
-                    >
+                    <motion.span className="word" custom={1} initial="hidden" animate="visible" variants={wordVariants}>
                       Mario
                     </motion.span>
                   </span>
                   {' '}
                   <span className="word-mask">
-                    <motion.span
-                      className="word"
-                      custom={2}
-                      initial="hidden"
-                      animate="visible"
-                      variants={wordVariants}
-                    >
+                    <motion.span className="word" custom={2} initial="hidden" animate="visible" variants={wordVariants}>
                       <em>Mamitantely.</em>
                     </motion.span>
                   </span>
@@ -294,7 +440,7 @@ export default function App() {
               style={{ y: portraitYSpring }}
             >
               <div className="portrait">
-                <img src="/moi.png" alt="Portrait de Mario Ratiarivony" />
+                <img src="/moi.png" alt="Portrait Mario Ratiarivony" />
               </div>
               <div className="portrait-caption">
                 Fig. 01 — Self<br />Tana, 2026
@@ -304,23 +450,22 @@ export default function App() {
             <div className="hero-bottom">
               <motion.p
                 className="hero-subdisplay"
+                key={`sub-${lang}`}
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.55, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
               >
-                <em>Developer</em> &amp; digital craftsman.
+                {t.hero.sub}
               </motion.p>
 
               <motion.p
                 className="hero-lede"
+                key={`lede-${lang}`}
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
               >
-                Je conçois des interfaces premium, des systèmes
-                <em> automatisés </em>N8N et des backends solides en Nest,
-                Django ou C#. Vingt ans, basé à Madagascar, disponible pour
-                collaborer ailleurs.
+                {t.hero.lede}
               </motion.p>
 
               <motion.div
@@ -330,32 +475,20 @@ export default function App() {
                 transition={{ delay: 0.85, duration: 0.6 }}
               >
                 <button className="btn btn-primary" onClick={() => scrollTo('work')}>
-                  Selected work <span className="arrow">→</span>
+                  {t.hero.ctaWork} <span className="arrow">→</span>
                 </button>
                 <button className="btn btn-ghost" onClick={() => scrollTo('contact')}>
-                  Get in touch
+                  {t.hero.ctaContact}
                 </button>
               </motion.div>
             </div>
           </div>
 
           <div className="hero-meta-row">
-            <div className="hero-meta">
-              <strong>08</strong>
-              <span>Shipped projects</span>
-            </div>
-            <div className="hero-meta">
-              <strong>17</strong>
-              <span>Stacks mastered</span>
-            </div>
-            <div className="hero-meta">
-              <strong>03</strong>
-              <span>Spoken languages</span>
-            </div>
-            <div className="hero-meta">
-              <strong>20</strong>
-              <span>Years young</span>
-            </div>
+            <div className="hero-meta"><strong>08</strong><span>{t.meta.shipped}</span></div>
+            <div className="hero-meta"><strong>17</strong><span>{t.meta.stacks}</span></div>
+            <div className="hero-meta"><strong>03</strong><span>{t.meta.langs}</span></div>
+            <div className="hero-meta"><strong>20</strong><span>{t.meta.years}</span></div>
           </div>
         </section>
 
@@ -374,48 +507,51 @@ export default function App() {
         {/* ===================== WORK ===================== */}
         <section id="work" className="section">
           <div className="section-head">
-            <p className="eyebrow">Selected work</p>
-            <h2 className="section-title">Things I&apos;ve <em>shipped</em>.</h2>
+            <p className="eyebrow">{t.work.eyebrow}</p>
+            <h2 className="section-title">{t.work.title}</h2>
           </div>
 
           <div className="work-list">
-            {projects.map((p, i) => (
-              <motion.a
-                key={p.title}
-                className="work-row"
-                href={p.url}
-                target="_blank"
-                rel="noreferrer"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-                onMouseEnter={() => setHoverPreview(p.image)}
-                onMouseLeave={() => setHoverPreview(null)}
-              >
-                <span className="work-num">{String(i + 1).padStart(2, '0')}</span>
-                <span className="work-title">
-                  {p.title}
-                  <small>{p.category}</small>
-                </span>
-                <span className="work-meta">
-                  <span>{p.tech}</span>
-                  <span>· {p.year}</span>
-                  <span className="arrow">↗</span>
-                </span>
-                <div className="work-thumb-mobile">
-                  <img src={p.image} alt={p.title} loading="lazy" />
-                </div>
-              </motion.a>
-            ))}
+            {projects.map((p, i) => {
+              const meta = t.projects[p.key];
+              return (
+                <motion.a
+                  key={p.key}
+                  className="work-row"
+                  href={p.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.5, delay: i * 0.05 }}
+                  onMouseEnter={() => setHoverPreview(p.image)}
+                  onMouseLeave={() => setHoverPreview(null)}
+                >
+                  <span className="work-num">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="work-title">
+                    {meta.title}
+                    <small>{p.category}</small>
+                  </span>
+                  <span className="work-meta">
+                    <span>{p.tech}</span>
+                    <span>· {p.year}</span>
+                    <span className="arrow">↗</span>
+                  </span>
+                  <div className="work-thumb-mobile">
+                    <img src={p.image} alt={meta.title} loading="lazy" />
+                  </div>
+                </motion.a>
+              );
+            })}
           </div>
         </section>
 
         {/* ===================== PRACTICE ===================== */}
         <section id="practice" className="section">
           <div className="section-head">
-            <p className="eyebrow">Practice · stack</p>
-            <h2 className="section-title">A toolbox built for <em>solo shipping</em>.</h2>
+            <p className="eyebrow">{t.practice.eyebrow}</p>
+            <h2 className="section-title">{t.practice.title}</h2>
           </div>
 
           <div className="stack-grid">
@@ -430,7 +566,7 @@ export default function App() {
               >
                 <header>
                   <h3>{group}</h3>
-                  <span>{groupLabels[group]}</span>
+                  <span>{t.groupLabels[group]}</span>
                 </header>
                 <div className="stack-list">
                   {items.map((s, j) => (
@@ -454,12 +590,12 @@ export default function App() {
           </div>
 
           <div className="lang-row">
-            <p className="label">Spoken languages</p>
+            <p className="label">{t.langsLabel}</p>
             <div className="lang-items">
               {languages.map((l) => (
                 <div className="lang-item" key={l.name}>
                   <strong>{l.level}<span style={{ fontSize: '0.5em', verticalAlign: 'super', marginLeft: 2 }}>%</span></strong>
-                  <span>{l.name}</span>
+                  <span>{t.langNames[l.name]}</span>
                 </div>
               ))}
             </div>
@@ -470,20 +606,16 @@ export default function App() {
         <section id="contact" className="section">
           <div className="contact-grid">
             <div className="contact-intro">
-              <p className="eyebrow">Contact</p>
-              <h2>Let&apos;s build something <em>worth shipping.</em></h2>
-              <p>
-                Un projet web, mobile, backend ou un workflow d&apos;automatisation à
-                construire ? Écris-moi — je réponds rapidement et propose une
-                approche claire avant tout devis.
-              </p>
+              <p className="eyebrow">{t.contact.eyebrow}</p>
+              <h2>{t.contact.title}</h2>
+              <p>{t.contact.body}</p>
 
               <div className="contact-list">
-                {contacts.map((c) => (
-                  <a key={c.label} href={c.href} target={c.href.startsWith('http') ? '_blank' : '_self'} rel="noreferrer">
+                {contactsBase.map((c) => (
+                  <a key={c.code} href={c.href} target={c.href.startsWith('http') ? '_blank' : '_self'} rel="noreferrer">
                     <span className="icon">{c.icon}</span>
                     <div>
-                      <span className="label">{c.label}</span>
+                      <span className="label">{t.contactLabels[c.code]}</span>
                       <span className="value">{c.value}</span>
                     </div>
                     <span className="arrow">↗</span>
@@ -494,23 +626,23 @@ export default function App() {
 
             <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
               <header>
-                <h3>Send a brief.</h3>
-                <span>NEW · MESSAGE</span>
+                <h3>{t.contact.formTitle}</h3>
+                <span>{t.contact.formMeta}</span>
               </header>
               <div className="field">
-                <label htmlFor="name">Nom</label>
-                <input id="name" name="name" placeholder="Votre nom" />
+                <label htmlFor="name">{t.contact.fieldName}</label>
+                <input id="name" name="name" placeholder={t.contact.placeholderName} />
               </div>
               <div className="field">
-                <label htmlFor="email">Email</label>
-                <input id="email" name="email" type="email" placeholder="votre@email.com" />
+                <label htmlFor="email">{t.contact.fieldEmail}</label>
+                <input id="email" name="email" type="email" placeholder={t.contact.placeholderEmail} />
               </div>
               <div className="field">
-                <label htmlFor="message">Message</label>
-                <textarea id="message" name="message" rows="5" placeholder="Parlez-moi de votre projet…" />
+                <label htmlFor="message">{t.contact.fieldMessage}</label>
+                <textarea id="message" name="message" rows="5" placeholder={t.contact.placeholderMessage} />
               </div>
               <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
-                Envoyer <span className="arrow">→</span>
+                {t.contact.send} <span className="arrow">→</span>
               </button>
             </form>
           </div>
@@ -519,7 +651,7 @@ export default function App() {
         {/* ===================== FOOTER ===================== */}
         <footer className="footer">
           <div className="footer-brand"><em>Mario</em> Ratiarivony</div>
-          <div className="footer-meta">© 2026 — Crafted in Antananarivo</div>
+          <div className="footer-meta">{t.footer.tagline}</div>
           <div className="footer-links">
             <a href="https://www.linkedin.com/in/mario-mamitantely-ratiarivony/" target="_blank" rel="noreferrer">LinkedIn</a>
             <a href="https://github.com/MaryRatiary" target="_blank" rel="noreferrer">GitHub</a>
