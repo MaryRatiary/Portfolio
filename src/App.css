@@ -166,7 +166,7 @@ img { max-width: 100%; display: block; }
 
 /* ---------- Hero ---------- */
 .hero {
-  padding: clamp(60px, 12vh, 140px) 0 clamp(80px, 14vh, 160px);
+  padding: clamp(20px, 4vh, 48px) 0 clamp(80px, 14vh, 160px);
   position: relative;
 }
 .hero-grid {
