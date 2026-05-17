@@ -714,44 +714,74 @@ img { max-width: 100%; display: block; }
   font-family: var(--font-mono);
   font-size: 12px;
 }
+/* ---------- Mobile drawer (rendered outside .nav to escape backdrop-filter containing block) ---------- */
+.mobile-drawer {
+  display: none;
+}
+
 @media (max-width: 720px) {
   .nav-toggle { display: inline-flex; }
   .nav-links { display: none; }
-  .nav-links.open {
+
+  .mobile-drawer {
     display: flex;
-    position: fixed; inset: 0;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    padding: 96px var(--gutter) 40px;
-    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    position: fixed;
+    inset: 0;
+    padding: 96px var(--gutter) 48px;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
     backdrop-filter: blur(28px) saturate(140%);
     -webkit-backdrop-filter: blur(28px) saturate(140%);
-    border: none;
-    gap: 0;
-    z-index: 40;
+    z-index: 45;
     overflow-y: auto;
-    animation: drawerIn 0.45s var(--ease);
+    gap: 0;
+    /* hidden state */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.35s var(--ease), transform 0.45s var(--ease);
   }
-  .nav-links.open a, .nav-links.open button {
+
+  .mobile-drawer.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .mobile-drawer a,
+  .mobile-drawer button {
     font-family: var(--font-display);
-    font-size: 38px;
+    font-size: 42px;
+    line-height: 1.1;
     text-transform: none;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
     color: var(--ink);
-    padding: 18px 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+    padding: 20px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
     width: 100%;
     text-align: left;
+    background: none;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), color 0.3s var(--ease);
   }
-  .nav-links.open a:last-child, .nav-links.open button:last-child { border-bottom: none; }
-  .nav-links.open a::after, .nav-links.open button::after { display: none; }
+  .mobile-drawer.open a,
+  .mobile-drawer.open button {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .mobile-drawer.open button:nth-child(1) { transition-delay: 0.12s; }
+  .mobile-drawer.open button:nth-child(2) { transition-delay: 0.18s; }
+  .mobile-drawer.open button:nth-child(3) { transition-delay: 0.24s; }
+  .mobile-drawer.open a:nth-child(4)      { transition-delay: 0.30s; }
 
-  /* Nav header au-dessus du drawer reste blurré (z-index: 50 > 40) */
+  .mobile-drawer a:last-child,
+  .mobile-drawer button:last-child { border-bottom: none; }
+  .mobile-drawer a:hover, .mobile-drawer button:hover { color: var(--rust); }
+
+  /* Keep nav semi-transparent on mobile so the drawer blur reads consistently */
   .nav { background: color-mix(in srgb, var(--bg) 72%, transparent); }
-}
-
-@keyframes drawerIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
 }

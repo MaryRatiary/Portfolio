@@ -188,19 +188,47 @@ export default function App() {
           <small>©2026 · MG</small>
         </button>
 
-        <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
+        <div className="nav-links">
           {navItems.map((item) => (
-            <button key={item.id} onClick={() => { scrollTo(item.id); setMenuOpen(false); }}>
+            <button key={item.id} onClick={() => scrollTo(item.id)}>
               {item.label}
             </button>
           ))}
-          <a href="mailto:maryratiary@gmail.com" onClick={() => setMenuOpen(false)}>Hire →</a>
+          <a href="mailto:maryratiary@gmail.com">Hire →</a>
         </div>
 
-        <button className="nav-toggle" onClick={() => setMenuOpen((v) => !v)} aria-label="Menu">
+        <button
+          className="nav-toggle"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label="Menu"
+          aria-expanded={menuOpen}
+        >
           {menuOpen ? '×' : '≡'}
         </button>
       </nav>
+
+      {/* Mobile drawer rendered OUTSIDE the nav (backdrop-filter on nav breaks position:fixed in children) */}
+      <div
+        className={`mobile-drawer ${menuOpen ? 'open' : ''}`}
+        aria-hidden={!menuOpen}
+      >
+        {navItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => { scrollTo(item.id); setMenuOpen(false); }}
+            tabIndex={menuOpen ? 0 : -1}
+          >
+            {item.label}
+          </button>
+        ))}
+        <a
+          href="mailto:maryratiary@gmail.com"
+          onClick={() => setMenuOpen(false)}
+          tabIndex={menuOpen ? 0 : -1}
+        >
+          Hire →
+        </a>
+      </div>
 
       <main className="container">
         {/* ===================== HERO ===================== */}
