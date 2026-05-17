@@ -1,84 +1,130 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import './App.css';
 
+const wordVariants = {
+  hidden: { y: '115%' },
+  visible: (i) => ({
+    y: 0,
+    transition: { duration: 1, delay: 0.1 + i * 0.13, ease: [0.2, 0.8, 0.2, 1] },
+  }),
+};
+
 const navItems = [
-  { id: 'home', label: 'Accueil' },
-  { id: 'skills', label: 'Expertise' },
-  { id: 'projects', label: 'Projets' },
+  { id: 'work', label: 'Work' },
+  { id: 'practice', label: 'Practice' },
   { id: 'contact', label: 'Contact' },
 ];
 
 const skills = [
   { name: 'React', level: 95, group: 'Frontend' },
   { name: 'Next.js', level: 85, group: 'Frontend' },
-  { name: 'React Native', level: 90, group: 'Mobile' },
   { name: 'Angular', level: 75, group: 'Frontend' },
-  { name: 'Nest backend', level: 86, group: 'Backend' },
+  { name: 'React Native', level: 90, group: 'Frontend' },
+  { name: 'Nest', level: 86, group: 'Backend' },
   { name: 'Django', level: 80, group: 'Backend' },
   { name: 'C# / ASP.Net', level: 85, group: 'Backend' },
   { name: 'Java', level: 70, group: 'Backend' },
   { name: 'Symfony', level: 75, group: 'Backend' },
-  { name: 'Automatisation N8N', level: 88, group: 'Automation' },
+  { name: 'N8N', level: 88, group: 'Automation' },
   { name: 'Make', level: 80, group: 'Automation' },
   { name: 'HubSpot', level: 85, group: 'Automation' },
   { name: 'Lemlist', level: 80, group: 'Automation' },
   { name: 'Brevo', level: 78, group: 'Automation' },
-  { name: 'Blender', level: 82, group: 'Design' },
-  { name: 'Adobe After Effects', level: 88, group: 'Design' },
-  { name: 'CapCut', level: 90, group: 'Design' },
+  { name: 'Blender', level: 82, group: 'Craft' },
+  { name: 'After Effects', level: 88, group: 'Craft' },
+  { name: 'CapCut', level: 90, group: 'Craft' },
 ];
+
+const groupOrder = ['Frontend', 'Backend', 'Automation', 'Craft'];
+const groupLabels = {
+  Frontend: '01 — Interfaces',
+  Backend: '02 — Systems',
+  Automation: '03 — Flows',
+  Craft: '04 — Visual',
+};
 
 const projects = [
   {
+    title: 'Luxy Shop',
+    tagline: 'Boutique e-commerce premium — produits lifestyle haut de gamme.',
+    url: 'https://luxyshop.netlify.app',
+    tech: 'React · Tailwind · E-Commerce',
+    year: '2026',
+    category: 'Luxury E-Commerce',
+    image: '/luxury.png',
+  },
+  {
+    title: 'K-Pop Shop',
+    tagline: 'Boutique en ligne dédiée à la culture K-Pop : merch, albums, lightsticks.',
+    url: 'https://kpopshop.netlify.app',
+    tech: 'React · Tailwind · Stripe',
+    year: '2026',
+    category: 'Niche E-Commerce',
+    image: '/kpopshop.netlify.png',
+  },
+  {
+    title: 'Scaleas',
+    tagline: 'Plateforme e-commerce scalable avec architecture modulaire.',
+    url: 'https://scaleas-e.netlify.app',
+    tech: 'React · Node · Scalable',
+    year: '2026',
+    category: 'E-Commerce Platform',
+    image: '/scale.png',
+  },
+  {
     title: 'Nexus Lab',
-    description: 'Intégration 3D avec Three.js sur une plateforme de digitalisation futuriste.',
+    tagline: 'Plateforme de digitalisation futuriste avec intégration 3D Three.js.',
     url: 'https://nexuslaab.netlify.app',
-    tech: ['React', 'Three.js', 'Tailwind CSS'],
-    image: '/nexuslaab.png',
+    tech: 'React · Three.js · Tailwind',
+    year: '2025',
     category: '3D Integration',
+    image: '/nexuslaab.png',
   },
   {
     title: 'All Stone Mada',
-    description: 'Plateforme e-commerce de vente de pierres précieuses à Madagascar.',
+    tagline: 'E-commerce de pierres précieuses, Madagascar.',
     url: 'https://allstonemada.netlify.app',
-    tech: ['React', 'C#', 'ASP.Net'],
-    image: '/allstoneof mada.png',
+    tech: 'React · C# · ASP.Net',
+    year: '2024',
     category: 'E-Commerce',
+    image: '/allstoneof mada.png',
   },
   {
     title: 'Aveny Work',
-    description: 'Site web avec IA intégrée pour suggestions business et tableau de bord dynamique.',
+    tagline: 'Plateforme IA avec suggestions business et dashboard dynamique.',
     url: 'https://avenywork.netlify.app',
-    tech: ['React', 'Django', 'Machine Learning'],
-    image: '/avenywork.png',
+    tech: 'React · Django · ML',
+    year: '2024',
     category: 'AI Platform',
+    image: '/avenywork.png',
   },
   {
     title: 'Ratiary Business',
-    description: 'Site web statique pour promouvoir des offres multi-services en ligne.',
+    tagline: 'Site multi-services optimisé SEO.',
     url: 'https://ratiarybusiness.netlify.app',
-    tech: ['React', 'Tailwind CSS', 'SEO'],
-    image: '/ratiarybusiness.png',
+    tech: 'React · Tailwind · SEO',
+    year: '2024',
     category: 'Business',
+    image: '/ratiarybusiness.png',
   },
   {
     title: 'Rise Platform',
-    description: 'Réseau social étudiant avec publications, messages et formulaires dynamiques.',
+    tagline: 'Réseau social étudiant temps réel, publications & messages.',
     url: 'https://riseplatform.netlify.app',
-    tech: ['React', 'C#', 'Real-time'],
-    image: '/riseplatform.png',
+    tech: 'React · C# · Realtime',
+    year: '2024',
     category: 'Social Network',
+    image: '/riseplatform.png',
   },
 ];
 
 const contacts = [
-  { label: 'Age', value: '20 ans', icon: '01' },
-  { label: 'Email', value: 'maryratiary@gmail.com', href: 'mailto:maryratiary@gmail.com', icon: '02' },
-  { label: 'Téléphone', value: '+261****0917', href: 'tel:+261****0917', icon: '03' },
-  { label: 'Téléphone 2', value: '+261****8480', href: 'tel:+261****8480', icon: '04' },
-  { label: 'Facebook', value: 'Mario Ratiary', href: 'https://facebook.com/mario.ratiary', icon: '05' },
-  { label: 'LinkedIn', value: 'Ratiarivony Mario', href: 'https://www.linkedin.com/in/mario-mamitantely-ratiarivony/', icon: '06' },
+  { icon: '01', label: 'Email', value: 'maryratiary@gmail.com', href: 'mailto:maryratiary@gmail.com' },
+  { icon: '02', label: 'Téléphone', value: '+261 ** ** 0917', href: 'tel:+2610917' },
+  { icon: '03', label: 'LinkedIn', value: 'Ratiarivony Mario', href: 'https://www.linkedin.com/in/mario-mamitantely-ratiarivony/' },
+  { icon: '04', label: 'GitHub', value: 'MaryRatiary', href: 'https://github.com/MaryRatiary' },
+  { icon: '05', label: 'Facebook', value: 'Mario Ratiary', href: 'https://facebook.com/mario.ratiary' },
 ];
 
 const languages = [
@@ -91,166 +137,373 @@ function scrollTo(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function App() {
-  const [dark, setDark] = useState(true);
+export default function App() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
-  const portraitY = useTransform(scrollYProgress, [0, 0.5], [0, -42]);
 
-  const groupedSkills = useMemo(() => {
-    return skills.reduce((acc, skill) => {
-      acc[skill.group] = [...(acc[skill.group] || []), skill];
-      return acc;
-    }, {});
+  const heroRef = useRef(null);
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+  const portraitY = useTransform(heroProgress, [0, 1], [0, -90]);
+  const portraitYSpring = useSpring(portraitY, { stiffness: 80, damping: 22 });
+
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [hoverPreview, setHoverPreview] = useState(null);
+  const previewRef = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', dark);
-  }, [dark]);
+    const onMove = (e) => {
+      if (!previewRef.current) return;
+      previewRef.current.style.left = `${e.clientX}px`;
+      previewRef.current.style.top = `${e.clientY}px`;
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+
+  const grouped = useMemo(() => {
+    return groupOrder.map((group) => ({
+      group,
+      items: skills.filter((s) => s.group === group),
+    }));
+  }, []);
 
   return (
-    <main className="portfolio-shell">
-      <motion.div className="progress-line" style={{ scaleX }} />
+    <div className="shell">
+      <motion.div className="progress" style={{ scaleX }} />
 
-      <nav className="top-nav">
-        <button className="brand" onClick={() => scrollTo('home')} aria-label="Retour accueil">
-          <span>M</span>
-          <small>NEON PORTFOLIO</small>
+      <nav className={`nav container ${scrolled ? 'scrolled' : ''}`}>
+        <button className="brand" onClick={() => { scrollTo('home'); setMenuOpen(false); }} aria-label="Accueil">
+          <span><em>M</em>ario</span>
+          <small>©2026 · MG</small>
         </button>
-        <div className="nav-links">
+
+        <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
           {navItems.map((item) => (
-            <button key={item.id} onClick={() => scrollTo(item.id)}>{item.label}</button>
+            <button key={item.id} onClick={() => { scrollTo(item.id); setMenuOpen(false); }}>
+              {item.label}
+            </button>
           ))}
+          <a href="mailto:maryratiary@gmail.com" onClick={() => setMenuOpen(false)}>Hire →</a>
         </div>
-        <button className="mode-button" onClick={() => setDark(!dark)}>{dark ? 'Light' : 'Dark'}</button>
+
+        <button className="nav-toggle" onClick={() => setMenuOpen((v) => !v)} aria-label="Menu">
+          {menuOpen ? '×' : '≡'}
+        </button>
       </nav>
 
-      <section id="home" className="hero-section section-offset">
-        <div className="hero-copy">
-          <motion.p className="eyebrow" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
-            Disponible pour collaborer · Madagascar
-          </motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
-            Ratiarivony <span>Mario Mamitantely</span>
-          </motion.h1>
-          <motion.p className="hero-text" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
-            Développeur web, mobile et backend. Je crée des interfaces premium, des systèmes automatisés N8N et des backends solides avec Nest, Django ou C#.
-          </motion.p>
-          <motion.div className="hero-actions" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}>
-            <button className="primary-cta" onClick={() => scrollTo('projects')}>Voir mes projets</button>
-            <button className="secondary-cta" onClick={() => scrollTo('contact')}>Me contacter</button>
-          </motion.div>
-          <motion.div className="hero-stats" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
-            <span><strong>5+</strong> projets publics</span>
-            <span><strong>17</strong> compétences clés</span>
-            <span><strong>3</strong> langues</span>
-          </motion.div>
-        </div>
+      <main className="container">
+        {/* ===================== HERO ===================== */}
+        <section id="home" className="hero" ref={heroRef}>
+          <div className="hero-grid">
+            <div className="hero-top">
+              <motion.p
+                className="eyebrow"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                Antananarivo, Madagascar · Open for work
+              </motion.p>
 
-        <motion.div className="portrait-stage" style={{ y: portraitY }} initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.18, duration: 0.8 }}>
-          <div className="portrait-frame">
-            <div className="portrait-scanline" />
-            <img src="/moi.png" alt="Mario Ratiarivony" />
+              <h1 className="hero-display">
+                <span className="line">
+                  <span className="word-mask">
+                    <motion.span
+                      className="word"
+                      custom={0}
+                      initial="hidden"
+                      animate="visible"
+                      variants={wordVariants}
+                    >
+                      Ratiarivony
+                    </motion.span>
+                  </span>
+                </span>
+                <span className="line">
+                  <span className="word-mask">
+                    <motion.span
+                      className="word"
+                      custom={1}
+                      initial="hidden"
+                      animate="visible"
+                      variants={wordVariants}
+                    >
+                      Mario
+                    </motion.span>
+                  </span>
+                  {' '}
+                  <span className="word-mask">
+                    <motion.span
+                      className="word"
+                      custom={2}
+                      initial="hidden"
+                      animate="visible"
+                      variants={wordVariants}
+                    >
+                      <em>Mamitantely.</em>
+                    </motion.span>
+                  </span>
+                </span>
+              </h1>
+            </div>
+
+            <motion.div
+              className="portrait-wrap"
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.45, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
+              style={{ y: portraitYSpring }}
+            >
+              <div className="portrait">
+                <img src="/moi.png" alt="Portrait de Mario Ratiarivony" />
+              </div>
+              <div className="portrait-caption">
+                Fig. 01 — Self<br />Tana, 2026
+              </div>
+            </motion.div>
+
+            <div className="hero-bottom">
+              <motion.p
+                className="hero-subdisplay"
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.55, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
+              >
+                <em>Developer</em> &amp; digital craftsman.
+              </motion.p>
+
+              <motion.p
+                className="hero-lede"
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
+              >
+                Je conçois des interfaces premium, des systèmes
+                <em> automatisés </em>N8N et des backends solides en Nest,
+                Django ou C#. Vingt ans, basé à Madagascar, disponible pour
+                collaborer ailleurs.
+              </motion.p>
+
+              <motion.div
+                className="hero-cta-row"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.85, duration: 0.6 }}
+              >
+                <button className="btn btn-primary" onClick={() => scrollTo('work')}>
+                  Selected work <span className="arrow">→</span>
+                </button>
+                <button className="btn btn-ghost" onClick={() => scrollTo('contact')}>
+                  Get in touch
+                </button>
+              </motion.div>
+            </div>
           </div>
-          <motion.div className="floating-note note-one" animate={{ y: [0, -14, 0] }} transition={{ duration: 5, repeat: Infinity }}>
-            UI/UX · Web Dev
-          </motion.div>
-          <motion.div className="floating-note note-two" animate={{ y: [0, 12, 0] }} transition={{ duration: 4.5, repeat: Infinity }}>
-            N8N Automation
-          </motion.div>
-        </motion.div>
-      </section>
 
-      <section id="skills" className="skills-section section-offset">
-        <div className="section-heading split-heading">
-          <p className="eyebrow">Expertise</p>
-          <h2>Stack technique en mode cockpit néon.</h2>
-          <p>Les mêmes informations, mais présentées comme un dashboard futuriste : catégories, modules et niveaux lisibles sans cartes basiques.</p>
+          <div className="hero-meta-row">
+            <div className="hero-meta">
+              <strong>08</strong>
+              <span>Shipped projects</span>
+            </div>
+            <div className="hero-meta">
+              <strong>17</strong>
+              <span>Stacks mastered</span>
+            </div>
+            <div className="hero-meta">
+              <strong>03</strong>
+              <span>Spoken languages</span>
+            </div>
+            <div className="hero-meta">
+              <strong>20</strong>
+              <span>Years young</span>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================== MARQUEE ===================== */}
+        <div className="marquee">
+          <div className="marquee-track">
+            <span>React</span><span>Nest</span><span>Django</span><span>N8N</span>
+            <span>React Native</span><span>C# · ASP.Net</span><span>Three.js</span>
+            <span>Automation</span><span>UI / UX</span><span>Madagascar</span>
+            <span>React</span><span>Nest</span><span>Django</span><span>N8N</span>
+            <span>React Native</span><span>C# · ASP.Net</span><span>Three.js</span>
+            <span>Automation</span><span>UI / UX</span><span>Madagascar</span>
+          </div>
         </div>
 
-        <div className="skills-console">
-          {Object.entries(groupedSkills).map(([group, items], groupIndex) => (
-            <motion.article className="skill-cluster" key={group} initial={false} animate={{ opacity: 1, x: 0 }} whileHover={{ x: groupIndex % 2 ? 8 : -8 }} transition={{ duration: 0.35 }}>
-              <header>
-                <span>0{groupIndex + 1}</span>
-                <h3>{group}</h3>
-              </header>
-              <div className="skill-lines">
-                {items.map((skill) => (
-                  <div className="skill-line" key={skill.name}>
-                    <b>{skill.name}</b>
-                    <i style={{ '--value': `${skill.level}%` }} />
-                    <em>{skill.level}%</em>
-                  </div>
+        {/* ===================== WORK ===================== */}
+        <section id="work" className="section">
+          <div className="section-head">
+            <p className="eyebrow">Selected work</p>
+            <h2 className="section-title">Things I&apos;ve <em>shipped</em>.</h2>
+          </div>
+
+          <div className="work-list">
+            {projects.map((p, i) => (
+              <motion.a
+                key={p.title}
+                className="work-row"
+                href={p.url}
+                target="_blank"
+                rel="noreferrer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: i * 0.05 }}
+                onMouseEnter={() => setHoverPreview(p.image)}
+                onMouseLeave={() => setHoverPreview(null)}
+              >
+                <span className="work-num">{String(i + 1).padStart(2, '0')}</span>
+                <span className="work-title">
+                  {p.title}
+                  <small>{p.category}</small>
+                </span>
+                <span className="work-meta">
+                  <span>{p.tech}</span>
+                  <span>· {p.year}</span>
+                  <span className="arrow">↗</span>
+                </span>
+                <div className="work-thumb-mobile">
+                  <img src={p.image} alt={p.title} loading="lazy" />
+                </div>
+              </motion.a>
+            ))}
+          </div>
+        </section>
+
+        {/* ===================== PRACTICE ===================== */}
+        <section id="practice" className="section">
+          <div className="section-head">
+            <p className="eyebrow">Practice · stack</p>
+            <h2 className="section-title">A toolbox built for <em>solo shipping</em>.</h2>
+          </div>
+
+          <div className="stack-grid">
+            {grouped.map(({ group, items }) => (
+              <motion.article
+                key={group}
+                className="stack-card"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5 }}
+              >
+                <header>
+                  <h3>{group}</h3>
+                  <span>{groupLabels[group]}</span>
+                </header>
+                <div className="stack-list">
+                  {items.map((s, j) => (
+                    <div className="stack-item" key={s.name}>
+                      <b>{s.name}</b>
+                      <i className="stack-bar">
+                        <motion.span
+                          className="stack-bar-fill"
+                          initial={{ scaleX: 0 }}
+                          whileInView={{ scaleX: s.level / 100 }}
+                          viewport={{ once: true, amount: 0.4 }}
+                          transition={{ duration: 1.2, delay: j * 0.05, ease: [0.2, 0.8, 0.2, 1] }}
+                        />
+                      </i>
+                      <em>{s.level}</em>
+                    </div>
+                  ))}
+                </div>
+              </motion.article>
+            ))}
+          </div>
+
+          <div className="lang-row">
+            <p className="label">Spoken languages</p>
+            <div className="lang-items">
+              {languages.map((l) => (
+                <div className="lang-item" key={l.name}>
+                  <strong>{l.level}<span style={{ fontSize: '0.5em', verticalAlign: 'super', marginLeft: 2 }}>%</span></strong>
+                  <span>{l.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================== CONTACT ===================== */}
+        <section id="contact" className="section">
+          <div className="contact-grid">
+            <div className="contact-intro">
+              <p className="eyebrow">Contact</p>
+              <h2>Let&apos;s build something <em>worth shipping.</em></h2>
+              <p>
+                Un projet web, mobile, backend ou un workflow d&apos;automatisation à
+                construire ? Écris-moi — je réponds rapidement et propose une
+                approche claire avant tout devis.
+              </p>
+
+              <div className="contact-list">
+                {contacts.map((c) => (
+                  <a key={c.label} href={c.href} target={c.href.startsWith('http') ? '_blank' : '_self'} rel="noreferrer">
+                    <span className="icon">{c.icon}</span>
+                    <div>
+                      <span className="label">{c.label}</span>
+                      <span className="value">{c.value}</span>
+                    </div>
+                    <span className="arrow">↗</span>
+                  </a>
                 ))}
               </div>
-            </motion.article>
-          ))}
-        </div>
+            </div>
 
-        <div className="language-radar">
-          {languages.map((language, index) => (
-            <motion.div key={language.name} className="language-node" initial={false} animate={{ opacity: 1, scale: 1 }} whileHover={{ scale: 1.04 }} transition={{ delay: index * 0.04 }}>
-              <strong>{language.level}%</strong>
-              <span>{language.name}</span>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      <section id="projects" className="projects-section section-offset">
-        <div className="section-heading centered">
-          <p className="eyebrow">Réalisations</p>
-          <h2>Projets en cartes néon uniformes.</h2>
-        </div>
-        <div className="project-grid">
-          {projects.map((project, index) => (
-            <motion.a className="project-card" href={project.url} target="_blank" rel="noreferrer" key={project.title} initial={false} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -10 }} transition={{ delay: index * 0.03 }}>
-              <div className="project-image"><img src={project.image} alt={project.title} /></div>
-              <div className="project-content">
-                <small>{project.category}</small>
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <div>{project.tech.map((tech) => <span key={tech}>{tech}</span>)}</div>
+            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+              <header>
+                <h3>Send a brief.</h3>
+                <span>NEW · MESSAGE</span>
+              </header>
+              <div className="field">
+                <label htmlFor="name">Nom</label>
+                <input id="name" name="name" placeholder="Votre nom" />
               </div>
-            </motion.a>
-          ))}
-        </div>
-      </section>
-
-      <section id="contact" className="contact-section section-offset">
-        <div className="contact-orbital">
-          <div className="contact-title">
-            <p className="eyebrow">Contact</p>
-            <h2>Ouvrir une ligne directe</h2>
-            <p>Vous avez un projet web, mobile, backend ou automatisation ? Envoyez un message et discutons d'une solution claire.</p>
+              <div className="field">
+                <label htmlFor="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="votre@email.com" />
+              </div>
+              <div className="field">
+                <label htmlFor="message">Message</label>
+                <textarea id="message" name="message" rows="5" placeholder="Parlez-moi de votre projet…" />
+              </div>
+              <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
+                Envoyer <span className="arrow">→</span>
+              </button>
+            </form>
           </div>
-          <div className="contact-list">
-            {contacts.map((item) => {
-              const content = <><span>{item.icon}</span><div><small>{item.label}</small><strong>{item.value}</strong></div></>;
-              return item.href ? <a key={item.label} href={item.href} target={item.href.startsWith('http') ? '_blank' : '_self'} rel="noreferrer">{content}</a> : <div key={item.label}>{content}</div>;
-            })}
-          </div>
-        </div>
-        <form className="message-terminal" onSubmit={(event) => event.preventDefault()}>
-          <div className="terminal-top"><span /><span /><span /><b>message.init</b></div>
-          <label>Nom<input placeholder="Votre nom" /></label>
-          <label>Email<input placeholder="votre@email.com" type="email" /></label>
-          <label>Message<textarea placeholder="Votre message..." rows="5" /></label>
-          <button>Envoyer le signal</button>
-        </form>
-      </section>
+        </section>
 
-      <footer className="footer">
-        <p>© 2026 Mario Mamitantely</p>
-        <div>
-          <a href="https://www.linkedin.com/in/mario-mamitantely-ratiarivony/" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a href="https://github.com/MaryRatiary" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="mailto:maryratiary@gmail.com">Email</a>
-        </div>
-      </footer>
-    </main>
+        {/* ===================== FOOTER ===================== */}
+        <footer className="footer">
+          <div className="footer-brand"><em>Mario</em> Ratiarivony</div>
+          <div className="footer-meta">© 2026 — Crafted in Antananarivo</div>
+          <div className="footer-links">
+            <a href="https://www.linkedin.com/in/mario-mamitantely-ratiarivony/" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://github.com/MaryRatiary" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="mailto:maryratiary@gmail.com">Email</a>
+          </div>
+        </footer>
+      </main>
+
+      {/* Floating hover preview (desktop) */}
+      <div ref={previewRef} className={`work-preview ${hoverPreview ? 'active' : ''}`}>
+        {hoverPreview && <img src={hoverPreview} alt="" />}
+      </div>
+    </div>
   );
 }
-
-export default App;
