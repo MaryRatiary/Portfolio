@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import './App.css';
 
@@ -73,12 +73,12 @@ const projects = [
 ];
 
 const contacts = [
-  { label: 'Age', value: '20 ans', icon: '✦' },
-  { label: 'Email', value: 'maryratiary@gmail.com', href: 'mailto:maryratiary@gmail.com', icon: '@' },
-  { label: 'Téléphone', value: '+261****0917', href: 'tel:+261****0917', icon: '☎' },
-  { label: 'Téléphone 2', value: '+261****8480', href: 'tel:+261****8480', icon: '☎' },
-  { label: 'Facebook', value: 'Mario Ratiary', href: 'https://facebook.com/mario.ratiary', icon: 'f' },
-  { label: 'LinkedIn', value: 'Ratiarivony Mario', href: 'https://www.linkedin.com/in/mario-mamitantely-ratiarivony/', icon: 'in' },
+  { label: 'Age', value: '20 ans', icon: '01' },
+  { label: 'Email', value: 'maryratiary@gmail.com', href: 'mailto:maryratiary@gmail.com', icon: '02' },
+  { label: 'Téléphone', value: '+261****0917', href: 'tel:+261****0917', icon: '03' },
+  { label: 'Téléphone 2', value: '+261****8480', href: 'tel:+261****8480', icon: '04' },
+  { label: 'Facebook', value: 'Mario Ratiary', href: 'https://facebook.com/mario.ratiary', icon: '05' },
+  { label: 'LinkedIn', value: 'Ratiarivony Mario', href: 'https://www.linkedin.com/in/mario-mamitantely-ratiarivony/', icon: '06' },
 ];
 
 const languages = [
@@ -92,10 +92,17 @@ function scrollTo(id) {
 }
 
 function App() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
-  const portraitY = useTransform(scrollYProgress, [0, 0.5], [0, -80]);
+  const portraitY = useTransform(scrollYProgress, [0, 0.5], [0, -42]);
+
+  const groupedSkills = useMemo(() => {
+    return skills.reduce((acc, skill) => {
+      acc[skill.group] = [...(acc[skill.group] || []), skill];
+      return acc;
+    }, {});
+  }, []);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
@@ -108,7 +115,7 @@ function App() {
       <nav className="top-nav">
         <button className="brand" onClick={() => scrollTo('home')} aria-label="Retour accueil">
           <span>M</span>
-          <small>Portfolio</small>
+          <small>NEON PORTFOLIO</small>
         </button>
         <div className="nav-links">
           {navItems.map((item) => (
@@ -141,49 +148,52 @@ function App() {
         </div>
 
         <motion.div className="portrait-stage" style={{ y: portraitY }} initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.18, duration: 0.8 }}>
-          <motion.a className="mini-pin mini-one" href="https://nexuslaab.netlify.app" target="_blank" rel="noreferrer" animate={{ y: [0, -12, 0], rotate: [-7, -3, -7] }} transition={{ duration: 5.4, repeat: Infinity }}>
-            <img src="/nexuslaab.png" alt="Nexus Lab" />
-            <span>3D</span>
-          </motion.a>
-          <motion.a className="mini-pin mini-two" href="https://avenywork.netlify.app" target="_blank" rel="noreferrer" animate={{ y: [0, 10, 0], rotate: [6, 2, 6] }} transition={{ duration: 4.8, repeat: Infinity }}>
-            <img src="/avenywork.png" alt="Aveny Work" />
-            <span>AI</span>
-          </motion.a>
-          <div className="pin-card portrait-main">
+          <div className="portrait-frame">
+            <div className="portrait-scanline" />
             <img src="/moi.png" alt="Mario Ratiarivony" />
           </div>
-          <motion.div className="floating-note note-one" animate={{ y: [0, -14, 0], rotate: [-3, 1, -3] }} transition={{ duration: 5, repeat: Infinity }}>
+          <motion.div className="floating-note note-one" animate={{ y: [0, -14, 0] }} transition={{ duration: 5, repeat: Infinity }}>
             UI/UX · Web Dev
           </motion.div>
-          <motion.div className="floating-note note-two" animate={{ y: [0, 12, 0], rotate: [4, -1, 4] }} transition={{ duration: 4.5, repeat: Infinity }}>
+          <motion.div className="floating-note note-two" animate={{ y: [0, 12, 0] }} transition={{ duration: 4.5, repeat: Infinity }}>
             N8N Automation
           </motion.div>
         </motion.div>
       </section>
 
       <section id="skills" className="skills-section section-offset">
-        <div className="section-heading">
+        <div className="section-heading split-heading">
           <p className="eyebrow">Expertise</p>
-          <h2>Un profil complet, du design au backend.</h2>
+          <h2>Stack technique en mode cockpit néon.</h2>
+          <p>Les mêmes informations, mais présentées comme un dashboard futuriste : catégories, modules et niveaux lisibles sans cartes basiques.</p>
         </div>
-        <div className="skill-board">
-          {skills.map((skill, index) => (
-            <motion.article className="skill-card" key={skill.name} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.2 }} transition={{ delay: (index % 6) * 0.04 }}>
-              <div>
-                <p>{skill.group}</p>
-                <h3>{skill.name}</h3>
+
+        <div className="skills-console">
+          {Object.entries(groupedSkills).map(([group, items], groupIndex) => (
+            <motion.article className="skill-cluster" key={group} initial={false} animate={{ opacity: 1, x: 0 }} whileHover={{ x: groupIndex % 2 ? 8 : -8 }} transition={{ duration: 0.35 }}>
+              <header>
+                <span>0{groupIndex + 1}</span>
+                <h3>{group}</h3>
+              </header>
+              <div className="skill-lines">
+                {items.map((skill) => (
+                  <div className="skill-line" key={skill.name}>
+                    <b>{skill.name}</b>
+                    <i style={{ '--value': `${skill.level}%` }} />
+                    <em>{skill.level}%</em>
+                  </div>
+                ))}
               </div>
-              <span>{skill.level}%</span>
-              <div className="skill-track"><motion.i initial={{ width: 0 }} whileInView={{ width: `${skill.level}%` }} transition={{ duration: 0.9 }} /></div>
             </motion.article>
           ))}
         </div>
-        <div className="language-strip">
-          {languages.map((language) => (
-            <div key={language.name}>
-              <span>{language.name}</span>
+
+        <div className="language-radar">
+          {languages.map((language, index) => (
+            <motion.div key={language.name} className="language-node" initial={false} animate={{ opacity: 1, scale: 1 }} whileHover={{ scale: 1.04 }} transition={{ delay: index * 0.04 }}>
               <strong>{language.level}%</strong>
-            </div>
+              <span>{language.name}</span>
+            </motion.div>
           ))}
         </div>
       </section>
@@ -191,12 +201,12 @@ function App() {
       <section id="projects" className="projects-section section-offset">
         <div className="section-heading centered">
           <p className="eyebrow">Réalisations</p>
-          <h2>Une galerie façon Pinterest, mais plus professionnelle.</h2>
+          <h2>Projets en cartes néon uniformes.</h2>
         </div>
-        <div className="masonry-grid">
+        <div className="project-grid">
           {projects.map((project, index) => (
-            <motion.a className={`project-pin pin-${index + 1}`} href={project.url} target="_blank" rel="noreferrer" key={project.title} initial={false} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -8 }} transition={{ delay: index * 0.04 }}>
-              <img src={project.image} alt={project.title} />
+            <motion.a className="project-card" href={project.url} target="_blank" rel="noreferrer" key={project.title} initial={false} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -10 }} transition={{ delay: index * 0.03 }}>
+              <div className="project-image"><img src={project.image} alt={project.title} /></div>
               <div className="project-content">
                 <small>{project.category}</small>
                 <h3>{project.title}</h3>
@@ -209,24 +219,25 @@ function App() {
       </section>
 
       <section id="contact" className="contact-section section-offset">
-        <div className="contact-panel">
-          <div>
+        <div className="contact-orbital">
+          <div className="contact-title">
             <p className="eyebrow">Contact</p>
-            <h2>Travaillons ensemble</h2>
+            <h2>Ouvrir une ligne directe</h2>
             <p>Vous avez un projet web, mobile, backend ou automatisation ? Envoyez un message et discutons d'une solution claire.</p>
           </div>
-          <div className="contact-grid">
+          <div className="contact-list">
             {contacts.map((item) => {
               const content = <><span>{item.icon}</span><div><small>{item.label}</small><strong>{item.value}</strong></div></>;
               return item.href ? <a key={item.label} href={item.href} target={item.href.startsWith('http') ? '_blank' : '_self'} rel="noreferrer">{content}</a> : <div key={item.label}>{content}</div>;
             })}
           </div>
         </div>
-        <form className="message-card" onSubmit={(event) => event.preventDefault()}>
-          <input placeholder="Votre nom" />
-          <input placeholder="votre@email.com" type="email" />
-          <textarea placeholder="Votre message..." rows="5" />
-          <button>Envoyer</button>
+        <form className="message-terminal" onSubmit={(event) => event.preventDefault()}>
+          <div className="terminal-top"><span /><span /><span /><b>message.init</b></div>
+          <label>Nom<input placeholder="Votre nom" /></label>
+          <label>Email<input placeholder="votre@email.com" type="email" /></label>
+          <label>Message<textarea placeholder="Votre message..." rows="5" /></label>
+          <button>Envoyer le signal</button>
         </form>
       </section>
 
