@@ -284,11 +284,18 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    const storageKey = 'mario-portfolio-views';
-    const current = Number.parseInt(localStorage.getItem(storageKey) || '0', 10);
-    const next = Number.isFinite(current) ? current + 1 : 1;
-    localStorage.setItem(storageKey, String(next));
-    setVisitCount(next);
+    const localKey = 'mario-portfolio-views-fallback';
+    const fallbackCount = () => {
+      const current = Number.parseInt(localStorage.getItem(localKey) || '0', 10);
+      const next = (Number.isFinite(current) ? current : 0) + 1;
+      localStorage.setItem(localKey, String(next));
+      setVisitCount(next);
+    };
+
+    fetch('/.netlify/functions/views', { method: 'POST', cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('views unavailable'))))
+      .then((data) => setVisitCount(data.views))
+      .catch(fallbackCount);
   }, []);
 
   const { scrollYProgress } = useScroll();
