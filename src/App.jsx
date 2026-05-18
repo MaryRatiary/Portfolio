@@ -73,6 +73,7 @@ const I18N = {
       ratiary: { title: 'Ratiary Business', tagline: 'Site multi-services optimisé SEO.' },
       rise: { title: 'Rise Platform', tagline: 'Réseau social étudiant temps réel, publications & messages.' },
       madagiascar: { title: 'MadagIAscar', tagline: 'Plateforme IA dédiée à Madagascar : assistance intelligente, contenus et services locaux.' },
+      ecoi: { title: 'ECOI SaaS', tagline: 'CRM SaaS intelligent avec leads, appels, RDV, analytics et automatisations commerciales.' },
     },
   },
   en: {
@@ -141,6 +142,7 @@ const I18N = {
       ratiary: { title: 'Ratiary Business', tagline: 'SEO-optimized multi-services site.' },
       rise: { title: 'Rise Platform', tagline: 'Real-time student social network — posts and messages.' },
       madagiascar: { title: 'MadagIAscar', tagline: 'AI platform for Madagascar — smart assistance, content and local services.' },
+      ecoi: { title: 'ECOI SaaS', tagline: 'Smart CRM SaaS with leads, calls, appointments, analytics and sales automations.' },
     },
   },
 };
@@ -199,6 +201,7 @@ const projects = [
   { key: 'ratiary',  url: 'https://ratiarybusiness.netlify.app', tech: 'React · Tailwind · SEO',    year: '2024', category: 'Business',           image: '/ratiarybusiness.png' },
   { key: 'rise',     url: 'https://riseplatform.netlify.app', tech: 'React · C# · Realtime',         year: '2024', category: 'Social Network',     image: '/riseplatform.png' },
   { key: 'madagiascar', url: 'http://62.72.18.244:5173/', tech: 'React · NestJS · IA', year: '2026', category: 'AI Platform', image: '/madagiascar.png' },
+  { key: 'ecoi', url: 'http://62.72.18.244:8080/', tech: 'React · NestJS · GHL', year: '2026', category: 'CRM SaaS', image: '/ecoi.png' },
 ];
 
 const contactsBase = [
@@ -518,7 +521,7 @@ export default function App() {
           </div>
 
           <div className="hero-meta-row">
-            <div className="hero-meta"><strong>09</strong><span>{t.meta.shipped}</span></div>
+            <div className="hero-meta"><strong>10</strong><span>{t.meta.shipped}</span></div>
             <div className="hero-meta"><strong>17</strong><span>{t.meta.stacks}</span></div>
             <div className="hero-meta"><strong>03</strong><span>{t.meta.langs}</span></div>
             <div className="hero-meta"><strong>20</strong><span>{t.meta.years}</span></div>
