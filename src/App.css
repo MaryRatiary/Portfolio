@@ -744,33 +744,39 @@ img { max-width: 100%; display: block; }
 }
 
 .visit-pill {
-  min-height: 32px;
+  min-height: 28px;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 11px;
-  border: 1px solid color-mix(in srgb, var(--ink) 55%, transparent);
+  gap: 5px;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--bg) 72%, transparent);
-  color: var(--ink);
+  background: transparent;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: 9px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  box-shadow: 0 12px 28px -22px rgba(var(--shadow), 0.35);
+  opacity: 0.58;
+}
+.visit-pill:hover {
+  opacity: 0.9;
+  border-color: color-mix(in srgb, var(--ink) 35%, transparent);
 }
 .visit-pill svg {
-  width: 15px;
-  height: 15px;
-  color: var(--rust);
+  width: 13px;
+  height: 13px;
+  color: currentColor;
 }
 .visit-pill strong {
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1;
-  color: var(--ink);
+  color: currentColor;
+  font-weight: 500;
 }
 .visit-pill span {
-  color: var(--muted);
+  color: currentColor;
+  display: none;
 }
 
 @media (max-width: 720px) {
