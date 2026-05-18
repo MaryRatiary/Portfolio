@@ -29,6 +29,7 @@ const I18N = {
       langs: 'Langues parlées',
       years: 'Ans jeune',
     },
+    views: 'visites',
     work: {
       eyebrow: 'Projets sélectionnés',
       title: (<>Ce que j&apos;ai <em>livré</em>.</>),
@@ -71,6 +72,7 @@ const I18N = {
       aveny: { title: 'Aveny Work', tagline: 'Plateforme IA avec suggestions business et dashboard dynamique.' },
       ratiary: { title: 'Ratiary Business', tagline: 'Site multi-services optimisé SEO.' },
       rise: { title: 'Rise Platform', tagline: 'Réseau social étudiant temps réel, publications & messages.' },
+      madagiascar: { title: 'MadagIAscar', tagline: 'Plateforme IA dédiée à Madagascar : assistance intelligente, contenus et services locaux.' },
     },
   },
   en: {
@@ -95,6 +97,7 @@ const I18N = {
       langs: 'Spoken languages',
       years: 'Years young',
     },
+    views: 'views',
     work: {
       eyebrow: 'Selected work',
       title: (<>Things I&apos;ve <em>shipped</em>.</>),
@@ -137,6 +140,7 @@ const I18N = {
       aveny: { title: 'Aveny Work', tagline: 'AI platform with business suggestions and dynamic dashboard.' },
       ratiary: { title: 'Ratiary Business', tagline: 'SEO-optimized multi-services site.' },
       rise: { title: 'Rise Platform', tagline: 'Real-time student social network — posts and messages.' },
+      madagiascar: { title: 'MadagIAscar', tagline: 'AI platform for Madagascar — smart assistance, content and local services.' },
     },
   },
 };
@@ -194,6 +198,7 @@ const projects = [
   { key: 'aveny',    url: 'https://avenywork.netlify.app',    tech: 'React · Django · ML',           year: '2024', category: 'AI Platform',         image: '/avenywork.png' },
   { key: 'ratiary',  url: 'https://ratiarybusiness.netlify.app', tech: 'React · Tailwind · SEO',    year: '2024', category: 'Business',           image: '/ratiarybusiness.png' },
   { key: 'rise',     url: 'https://riseplatform.netlify.app', tech: 'React · C# · Realtime',         year: '2024', category: 'Social Network',     image: '/riseplatform.png' },
+  { key: 'madagiascar', url: 'http://62.72.18.244:5173/', tech: 'React · NestJS · IA', year: '2026', category: 'AI Platform', image: '/madagiascar.png' },
 ];
 
 const contactsBase = [
@@ -227,6 +232,13 @@ const MoonIcon = () => (
   </svg>
 );
 
+const EyeIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
 /* ============================================================
    HELPERS
    ============================================================ */
@@ -256,6 +268,7 @@ function getInitialTheme() {
 export default function App() {
   const [lang, setLang] = useState(getInitialLang);
   const [theme, setTheme] = useState(getInitialTheme);
+  const [visitCount, setVisitCount] = useState(null);
   const t = I18N[lang];
 
   useEffect(() => {
@@ -269,6 +282,14 @@ export default function App() {
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#14110D' : '#F5F1EB');
   }, [theme]);
+
+  useEffect(() => {
+    const storageKey = 'mario-portfolio-views';
+    const current = Number.parseInt(localStorage.getItem(storageKey) || '0', 10);
+    const next = Number.isFinite(current) ? current + 1 : 1;
+    localStorage.setItem(storageKey, String(next));
+    setVisitCount(next);
+  }, []);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
@@ -318,8 +339,13 @@ export default function App() {
   }, []);
 
   const Tools = () => (
-    <div className="nav-tools">
-      <div className="lang-toggle" role="group" aria-label="Language">
+      <div className="nav-tools">
+        <div className="visit-pill" aria-label={`${visitCount ?? 0} ${t.views}`}>
+          <EyeIcon />
+          <strong>{visitCount ?? '—'}</strong>
+          <span>{t.views}</span>
+        </div>
+        <div className="lang-toggle" role="group" aria-label="Language">
         <button
           className={lang === 'fr' ? 'on' : ''}
           onClick={() => setLang('fr')}
@@ -485,7 +511,7 @@ export default function App() {
           </div>
 
           <div className="hero-meta-row">
-            <div className="hero-meta"><strong>08</strong><span>{t.meta.shipped}</span></div>
+            <div className="hero-meta"><strong>09</strong><span>{t.meta.shipped}</span></div>
             <div className="hero-meta"><strong>17</strong><span>{t.meta.stacks}</span></div>
             <div className="hero-meta"><strong>03</strong><span>{t.meta.langs}</span></div>
             <div className="hero-meta"><strong>20</strong><span>{t.meta.years}</span></div>
