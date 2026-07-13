@@ -476,7 +476,7 @@ export default function App() {
               style={{ y: portraitYSpring }}
             >
               <div className="portrait">
-                <img src="/moi.png" alt="Portrait Mario Ratiarivony" />
+                <img src="/moi.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" />
               </div>
               <div className="portrait-caption">
                 Fig. 01 — Self<br />Tana, 2026
