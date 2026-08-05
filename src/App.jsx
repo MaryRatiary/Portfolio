@@ -664,11 +664,8 @@ export default function App() {
               transition={{ delay: 0.45, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
               style={{ y: portraitYSpring }}
             >
-              <div className="portrait">
-                <img src="/moi.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" fetchPriority="high" />
-              </div>
-              <div className="portrait-caption">
-                Fig. 01 — Self<br />Tana, 2026
+              <div className="portrait portrait-cutout">
+                <img src="/moi-detoure.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" fetchPriority="high" />
               </div>
             </Motion.div>
 
