@@ -119,6 +119,7 @@ img { max-width: 100%; display: block; }
   /* Pleine largeur d'écran : la barre déborde du gutter du shell et n'est
      plus limitée au container centré ; le contenu garde le gutter en padding. */
   max-width: none;
+  width: calc(100% + 2 * var(--gutter));
   margin: 0 calc(-1 * var(--gutter));
   padding: 22px var(--gutter);
   backdrop-filter: blur(10px);
@@ -250,6 +251,12 @@ img { max-width: 100%; display: block; }
 }
 .hero-display em { font-style: italic; color: var(--rust); }
 .hero-display .line { display: block; }
+/* FoldText hérite de la typo du titre au lieu de ses réglages par défaut */
+.hero-display .fold-text {
+  line-height: inherit;
+  letter-spacing: inherit;
+  font-family: inherit;
+}
 .hero-display .word-mask {
   display: inline-block;
   overflow: hidden;
@@ -357,29 +364,15 @@ img { max-width: 100%; display: block; }
   transform: none;
   box-shadow: none;
 }
-.portrait-cutout { position: relative; }
-.portrait-cutout img { width: 100%; height: auto; object-fit: contain; }
-
-/* Couche arrière — l'ancienne photo, fondue dans le décor comme un bg */
-.portrait-cutout .portrait-back {
+.portrait-cutout img {
   width: 100%;
-  filter: sepia(0.55) saturate(0.8) contrast(0.98) brightness(1.04) opacity(0.45);
-}
-:root[data-theme="dark"] .portrait-cutout .portrait-back {
-  filter: sepia(0.6) saturate(0.85) contrast(0.98) brightness(0.85) opacity(0.4);
-}
-
-/* Couche avant — la photo principale, chevauche l'arrière, calée en bas à droite */
-.portrait-cutout .portrait-front {
-  position: absolute;
-  bottom: 0;
-  right: -7%;
-  width: 106%;
+  height: auto;
+  object-fit: contain;
   /* teinte chaude accordée au fond crème/rouille */
   filter: sepia(0.45) saturate(1.08) contrast(1.05) brightness(1.02)
           drop-shadow(0 34px 44px rgba(var(--shadow), 0.35));
 }
-:root[data-theme="dark"] .portrait-cutout .portrait-front {
+:root[data-theme="dark"] .portrait-cutout img {
   filter: sepia(0.5) saturate(1.1) contrast(1.06) brightness(0.96)
           drop-shadow(0 34px 44px rgba(var(--shadow), 0.5));
 }

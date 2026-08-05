@@ -6,6 +6,7 @@ import {
 } from 'react-icons/si';
 import LogoLoop from './LogoLoop';
 import LightRays from './LightRays';
+import FoldText from './FoldText';
 import './App.css';
 
 /* ============================================================
@@ -275,18 +276,6 @@ const I18N = {
       },
     },
   },
-};
-
-/* ============================================================
-   ANIMATION VARIANTS
-   ============================================================ */
-
-const wordVariants = {
-  hidden: { y: '115%' },
-  visible: (i) => ({
-    y: 0,
-    transition: { duration: 1, delay: 0.1 + i * 0.13, ease: [0.2, 0.8, 0.2, 1] },
-  }),
 };
 
 /* ============================================================
@@ -635,24 +624,53 @@ export default function App() {
 
               <h1 className="hero-display">
                 <span className="line">
-                  <span className="word-mask">
-                    <Motion.span className="word" custom={0} initial="hidden" animate="visible" variants={wordVariants}>
-                      Ratiarivony
-                    </Motion.span>
-                  </span>
+                  <FoldText
+                    text="Ratiarivony"
+                    splitBy="char"
+                    hinge="top"
+                    trigger="mount"
+                    duration={0.65}
+                    stagger={0.045}
+                    ease="power3.out"
+                    perspective={700}
+                    creaseShading={0.55}
+                    fontSize="inherit"
+                    fontWeight="inherit"
+                    color="currentColor"
+                  />
                 </span>
                 <span className="line">
-                  <span className="word-mask">
-                    <Motion.span className="word" custom={1} initial="hidden" animate="visible" variants={wordVariants}>
-                      Mario
-                    </Motion.span>
-                  </span>
+                  <FoldText
+                    text="Mario"
+                    splitBy="char"
+                    hinge="top"
+                    trigger="mount"
+                    duration={0.65}
+                    stagger={0.045}
+                    ease="power3.out"
+                    perspective={700}
+                    creaseShading={0.55}
+                    fontSize="inherit"
+                    fontWeight="inherit"
+                    color="currentColor"
+                  />
                   {' '}
-                  <span className="word-mask">
-                    <Motion.span className="word" custom={2} initial="hidden" animate="visible" variants={wordVariants}>
-                      <em>Mamitantely.</em>
-                    </Motion.span>
-                  </span>
+                  <em>
+                    <FoldText
+                      text="Mamitantely."
+                      splitBy="char"
+                      hinge="top"
+                      trigger="mount"
+                      duration={0.65}
+                      stagger={0.06}
+                      ease="power3.out"
+                      perspective={700}
+                      creaseShading={0.55}
+                      fontSize="inherit"
+                      fontWeight="inherit"
+                      color="currentColor"
+                    />
+                  </em>
                 </span>
               </h1>
             </div>
@@ -665,8 +683,7 @@ export default function App() {
               style={{ y: portraitYSpring }}
             >
               <div className="portrait portrait-cutout">
-                <img className="portrait-back" src="/moi-detoure.png" alt="" aria-hidden="true" />
-                <img className="portrait-front" src="/moi-front.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" fetchPriority="high" />
+                <img src="/moi-detoure.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" fetchPriority="high" />
               </div>
             </Motion.div>
 
