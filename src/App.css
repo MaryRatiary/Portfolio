@@ -316,7 +316,12 @@ img { max-width: 100%; display: block; }
   margin: 8px 0 12px;
 }
 @media (min-width: 900px) {
-  .portrait-wrap { margin: 12px 0 0; }
+  /* Grande, calée en bas : le bord inférieur touche la ligne des stats du hero */
+  .portrait-wrap {
+    max-width: 580px;
+    align-self: end;
+    margin: 0 0 calc(-1 * clamp(60px, 9vh, 90px));
+  }
 }
 @media (max-width: 899px) {
   .portrait-wrap {
@@ -340,7 +345,7 @@ img { max-width: 100%; display: block; }
 
 /* Variante détourée — pas de cadre, pas de fond, la personne flotte sur le hero */
 .portrait-cutout {
-  aspect-ratio: 3 / 4;
+  aspect-ratio: auto;
   background: transparent;
   border: none;
   border-radius: 0;
@@ -348,6 +353,7 @@ img { max-width: 100%; display: block; }
   transform: none;
   box-shadow: none;
 }
+.portrait-cutout img { width: 100%; height: auto; }
 .portrait-cutout img {
   object-fit: contain;
   /* teinte chaude accordée au fond crème/rouille */
