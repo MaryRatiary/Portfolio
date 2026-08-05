@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { AnimatePresence, motion as Motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import {
+  SiReact, SiNextdotjs, SiAngular, SiNestjs, SiDjango, SiDotnet, SiSymfony,
+  SiN8N, SiMake, SiHubspot, SiThreedotjs, SiTailwindcss, SiBlender, SiOpenjdk, SiStripe,
+} from 'react-icons/si';
+import LogoLoop from './LogoLoop';
 import './App.css';
 
 /* ============================================================
@@ -46,6 +51,15 @@ const I18N = {
     },
     langsLabel: 'Langues parlées',
     langNames: { Français: 'Français', Anglais: 'Anglais', Allemand: 'Allemand' },
+    langLevels: { bilingual: 'Bilingue', fluent: 'Courant', basics: 'Notions' },
+    skillLevels: { expert: 'Expert', advanced: 'Avancé', solid: 'Solide' },
+    caseLabels: {
+      context: 'Contexte',
+      build: 'Réalisation',
+      result: 'Résultat',
+      visit: 'Visiter le site',
+      privateDemo: 'Démo privée · sur demande',
+    },
     contact: {
       eyebrow: 'Contact',
       title: (<>Construisons quelque chose <em>qui mérite d&apos;exister.</em></>),
@@ -60,20 +74,73 @@ const I18N = {
       placeholderEmail: 'votre@email.com',
       placeholderMessage: 'Parlez-moi de votre projet…',
       send: 'Envoyer',
+      sending: 'Envoi en cours…',
+      sent: '✓ Message envoyé — je reviens vers vous rapidement.',
+      error: "L'envoi a échoué. Réessayez, ou écrivez-moi directement par email.",
     },
     contactLabels: { email: 'Email', phone: 'Téléphone', linkedin: 'LinkedIn', github: 'GitHub', facebook: 'Facebook' },
     footer: { tagline: '© 2026 — Conçu à Antananarivo' },
     projects: {
-      luxy: { title: 'Luxy Shop', tagline: 'Boutique e-commerce premium — produits lifestyle haut de gamme.' },
-      kpop: { title: 'K-Pop Shop', tagline: 'Boutique en ligne dédiée à la culture K-Pop : merch, albums, lightsticks.' },
-      scaleas: { title: 'Scaleas', tagline: 'Plateforme e-commerce scalable avec architecture modulaire.' },
-      nexus: { title: 'Nexus Lab', tagline: 'Plateforme de digitalisation futuriste avec intégration 3D Three.js.' },
-      allstone: { title: 'All Stone Mada', tagline: 'E-commerce de pierres précieuses, Madagascar.' },
-      aveny: { title: 'Aveny Work', tagline: 'Plateforme IA avec suggestions business et dashboard dynamique.' },
-      ratiary: { title: 'Ratiary Business', tagline: 'Site multi-services optimisé SEO.' },
-      rise: { title: 'Rise Platform', tagline: 'Réseau social étudiant temps réel, publications & messages.' },
-      madagiascar: { title: 'MadagIAscar', tagline: 'Plateforme IA dédiée à Madagascar : assistance intelligente, contenus et services locaux.' },
-      ecoi: { title: 'ECOI SaaS', tagline: 'CRM SaaS intelligent avec leads, appels, RDV, analytics et automatisations commerciales.' },
+      luxy: {
+        title: 'Luxy Shop', tagline: 'Boutique e-commerce premium — produits lifestyle haut de gamme.',
+        context: 'Une vitrine e-commerce qui devait être à la hauteur de produits lifestyle haut de gamme.',
+        build: 'Interface React + Tailwind : catalogue épuré, animations discrètes, parcours d’achat sans friction.',
+        result: 'Une expérience premium, rapide et responsive, qui met les produits en avant.',
+      },
+      kpop: {
+        title: 'K-Pop Shop', tagline: 'Boutique en ligne dédiée à la culture K-Pop : merch, albums, lightsticks.',
+        context: 'Un public passionné et un univers visuel fort : merch, albums et lightsticks K-Pop.',
+        build: 'React + Stripe : fiches produits vivantes, panier fluide, paiement sécurisé.',
+        result: 'Une boutique de niche complète, du catalogue jusqu’au paiement.',
+      },
+      scaleas: {
+        title: 'Scaleas', tagline: 'Plateforme e-commerce scalable avec architecture modulaire.',
+        context: 'Un e-commerce pensé pour grandir sans devoir tout réécrire.',
+        build: 'Architecture modulaire React + Node : composants réutilisables, logique découplée.',
+        result: 'Une base saine qui absorbe l’ajout de nouvelles fonctionnalités.',
+      },
+      nexus: {
+        title: 'Nexus Lab', tagline: 'Plateforme de digitalisation futuriste avec intégration 3D Three.js.',
+        context: 'Une vitrine de digitalisation qui devait marquer les esprits dès l’arrivée.',
+        build: 'Intégration 3D Three.js dans React, direction artistique futuriste.',
+        result: 'Un site immersif qui sert aussi de démonstration technique.',
+      },
+      allstone: {
+        title: 'All Stone Mada', tagline: 'E-commerce de pierres précieuses, Madagascar.',
+        context: 'Vendre des pierres de Madagascar en ligne, gestion du catalogue comprise.',
+        build: 'Front React, back C#/ASP.Net : catalogue, commandes et administration.',
+        result: 'Un e-commerce complet connecté à un vrai back-office.',
+      },
+      aveny: {
+        title: 'Aveny Work', tagline: 'Plateforme IA avec suggestions business et dashboard dynamique.',
+        context: 'Aider des entrepreneurs à identifier des idées business exploitables.',
+        build: 'Plateforme Django + ML : suggestions générées par IA, dashboard dynamique.',
+        result: 'Un outil d’aide à la décision simple à prendre en main.',
+      },
+      ratiary: {
+        title: 'Ratiary Business', tagline: 'Site multi-services optimisé SEO.',
+        context: 'Un site multi-services qui devait avant tout être trouvé sur Google.',
+        build: 'React + Tailwind avec un vrai travail SEO : structure, balises, performance.',
+        result: 'Un site rapide et bien positionné sur les recherches visées.',
+      },
+      rise: {
+        title: 'Rise Platform', tagline: 'Réseau social étudiant temps réel, publications & messages.',
+        context: 'Un réseau social étudiant : publications, messagerie, temps réel.',
+        build: 'Front React, back C# avec communication temps réel.',
+        result: 'Une plateforme sociale fonctionnelle de bout en bout.',
+      },
+      madagiascar: {
+        title: 'MadagIAscar', tagline: 'Plateforme IA dédiée à Madagascar : assistance intelligente, contenus et services locaux.',
+        context: 'Une IA utile localement : assistance et services pensés pour Madagascar.',
+        build: 'React + NestJS, intégration de modèles IA et de contenus locaux.',
+        result: 'Une plateforme IA opérationnelle, présentée en démo privée.',
+      },
+      ecoi: {
+        title: 'ECOI SaaS', tagline: 'CRM SaaS intelligent avec leads, appels, RDV, analytics et automatisations commerciales.',
+        context: 'Centraliser leads, appels et rendez-vous commerciaux d’une entreprise en croissance.',
+        build: 'CRM SaaS React + NestJS branché sur GoHighLevel : analytics et automatisations.',
+        result: 'Un outil utilisé au quotidien par les équipes commerciales.',
+      },
     },
   },
   en: {
@@ -115,6 +182,15 @@ const I18N = {
     },
     langsLabel: 'Spoken languages',
     langNames: { Français: 'French', Anglais: 'English', Allemand: 'German' },
+    langLevels: { bilingual: 'Bilingual', fluent: 'Fluent', basics: 'Basics' },
+    skillLevels: { expert: 'Expert', advanced: 'Advanced', solid: 'Solid' },
+    caseLabels: {
+      context: 'Context',
+      build: 'Build',
+      result: 'Outcome',
+      visit: 'Visit site',
+      privateDemo: 'Private demo · on request',
+    },
     contact: {
       eyebrow: 'Contact',
       title: (<>Let&apos;s build something <em>worth shipping.</em></>),
@@ -129,20 +205,73 @@ const I18N = {
       placeholderEmail: 'your@email.com',
       placeholderMessage: 'Tell me about your project…',
       send: 'Send',
+      sending: 'Sending…',
+      sent: "✓ Message sent — I'll get back to you shortly.",
+      error: 'Sending failed. Try again, or email me directly.',
     },
     contactLabels: { email: 'Email', phone: 'Phone', linkedin: 'LinkedIn', github: 'GitHub', facebook: 'Facebook' },
     footer: { tagline: '© 2026 — Crafted in Antananarivo' },
     projects: {
-      luxy: { title: 'Luxy Shop', tagline: 'Premium lifestyle e-commerce boutique.' },
-      kpop: { title: 'K-Pop Shop', tagline: 'Online store dedicated to K-Pop culture — merch, albums, lightsticks.' },
-      scaleas: { title: 'Scaleas', tagline: 'Scalable e-commerce platform with modular architecture.' },
-      nexus: { title: 'Nexus Lab', tagline: 'Futuristic digitalization platform with Three.js 3D integration.' },
-      allstone: { title: 'All Stone Mada', tagline: 'Precious stones e-commerce, Madagascar.' },
-      aveny: { title: 'Aveny Work', tagline: 'AI platform with business suggestions and dynamic dashboard.' },
-      ratiary: { title: 'Ratiary Business', tagline: 'SEO-optimized multi-services site.' },
-      rise: { title: 'Rise Platform', tagline: 'Real-time student social network — posts and messages.' },
-      madagiascar: { title: 'MadagIAscar', tagline: 'AI platform for Madagascar — smart assistance, content and local services.' },
-      ecoi: { title: 'ECOI SaaS', tagline: 'Smart CRM SaaS with leads, calls, appointments, analytics and sales automations.' },
+      luxy: {
+        title: 'Luxy Shop', tagline: 'Premium lifestyle e-commerce boutique.',
+        context: 'An e-commerce storefront that had to live up to premium lifestyle products.',
+        build: 'React + Tailwind interface: clean catalog, subtle animations, frictionless purchase flow.',
+        result: 'A fast, responsive, premium experience that puts the products first.',
+      },
+      kpop: {
+        title: 'K-Pop Shop', tagline: 'Online store dedicated to K-Pop culture — merch, albums, lightsticks.',
+        context: 'A passionate audience and a strong visual universe: K-Pop merch, albums and lightsticks.',
+        build: 'React + Stripe: lively product pages, smooth cart, secure checkout.',
+        result: 'A complete niche store, from catalog to payment.',
+      },
+      scaleas: {
+        title: 'Scaleas', tagline: 'Scalable e-commerce platform with modular architecture.',
+        context: 'An e-commerce platform designed to grow without a rewrite.',
+        build: 'Modular React + Node architecture: reusable components, decoupled logic.',
+        result: 'A healthy foundation that absorbs new features easily.',
+      },
+      nexus: {
+        title: 'Nexus Lab', tagline: 'Futuristic digitalization platform with Three.js 3D integration.',
+        context: 'A digitalization showcase that had to make an impression instantly.',
+        build: 'Three.js 3D integrated into React, with a futuristic art direction.',
+        result: 'An immersive site that doubles as a technical demo.',
+      },
+      allstone: {
+        title: 'All Stone Mada', tagline: 'Precious stones e-commerce, Madagascar.',
+        context: 'Selling stones from Madagascar online, catalog management included.',
+        build: 'React front, C#/ASP.Net back: catalog, orders and admin.',
+        result: 'A full e-commerce connected to a real back-office.',
+      },
+      aveny: {
+        title: 'Aveny Work', tagline: 'AI platform with business suggestions and dynamic dashboard.',
+        context: 'Helping entrepreneurs identify actionable business ideas.',
+        build: 'Django + ML platform: AI-generated suggestions, dynamic dashboard.',
+        result: 'A decision-support tool that is easy to pick up.',
+      },
+      ratiary: {
+        title: 'Ratiary Business', tagline: 'SEO-optimized multi-services site.',
+        context: 'A multi-services site that above all had to be found on Google.',
+        build: 'React + Tailwind with real SEO work: structure, meta tags, performance.',
+        result: 'A fast site, well ranked on the targeted searches.',
+      },
+      rise: {
+        title: 'Rise Platform', tagline: 'Real-time student social network — posts and messages.',
+        context: 'A student social network: posts, messaging, real time.',
+        build: 'React front, C# back with real-time communication.',
+        result: 'A social platform working end to end.',
+      },
+      madagiascar: {
+        title: 'MadagIAscar', tagline: 'AI platform for Madagascar — smart assistance, content and local services.',
+        context: 'AI that is useful locally: assistance and services designed for Madagascar.',
+        build: 'React + NestJS, integrating AI models and local content.',
+        result: 'An operational AI platform, shown as a private demo.',
+      },
+      ecoi: {
+        title: 'ECOI SaaS', tagline: 'Smart CRM SaaS with leads, calls, appointments, analytics and sales automations.',
+        context: 'Centralizing leads, calls and sales appointments for a growing company.',
+        build: 'React + NestJS SaaS CRM wired to GoHighLevel: analytics and automations.',
+        result: 'A tool used daily by the sales teams.',
+      },
     },
   },
 };
@@ -191,17 +320,35 @@ const skills = [
 
 const groupOrder = ['Frontend', 'Backend', 'Automation', 'Craft'];
 
+const techLogos = [
+  { node: <SiReact />, title: 'React' },
+  { node: <SiNextdotjs />, title: 'Next.js' },
+  { node: <SiAngular />, title: 'Angular' },
+  { node: <SiNestjs />, title: 'NestJS' },
+  { node: <SiDjango />, title: 'Django' },
+  { node: <SiDotnet />, title: 'C# / .NET' },
+  { node: <SiOpenjdk />, title: 'Java' },
+  { node: <SiSymfony />, title: 'Symfony' },
+  { node: <SiN8N />, title: 'N8N' },
+  { node: <SiMake />, title: 'Make' },
+  { node: <SiHubspot />, title: 'HubSpot' },
+  { node: <SiStripe />, title: 'Stripe' },
+  { node: <SiThreedotjs />, title: 'Three.js' },
+  { node: <SiTailwindcss />, title: 'Tailwind CSS' },
+  { node: <SiBlender />, title: 'Blender' },
+];
+
 const projects = [
   { key: 'luxy',     url: 'https://luxyshop.netlify.app',     tech: 'React · Tailwind · E-Commerce', year: '2026', category: 'Luxury E-Commerce',  image: '/luxury.png' },
   { key: 'kpop',     url: 'https://kpopshop.netlify.app',     tech: 'React · Tailwind · Stripe',     year: '2026', category: 'Niche E-Commerce',   image: '/kpopshop.netlify.png' },
   { key: 'scaleas',  url: 'https://scaleas-e.netlify.app',    tech: 'React · Node · Scalable',       year: '2026', category: 'E-Commerce Platform', image: '/scale.png' },
   { key: 'nexus',    url: 'https://nexuslaab.netlify.app',    tech: 'React · Three.js · Tailwind',   year: '2025', category: '3D Integration',     image: '/nexuslaab.png' },
-  { key: 'allstone', url: 'https://allstonemada.netlify.app', tech: 'React · C# · ASP.Net',          year: '2024', category: 'E-Commerce',          image: '/allstoneof mada.png' },
+  { key: 'allstone', url: 'https://allstonemada.netlify.app', tech: 'React · C# · ASP.Net',          year: '2024', category: 'E-Commerce',          image: '/allstone-mada.png' },
   { key: 'aveny',    url: 'https://avenywork.netlify.app',    tech: 'React · Django · ML',           year: '2024', category: 'AI Platform',         image: '/avenywork.png' },
   { key: 'ratiary',  url: 'https://ratiarybusiness.netlify.app', tech: 'React · Tailwind · SEO',    year: '2024', category: 'Business',           image: '/ratiarybusiness.png' },
   { key: 'rise',     url: 'https://riseplatform.netlify.app', tech: 'React · C# · Realtime',         year: '2024', category: 'Social Network',     image: '/riseplatform.png' },
-  { key: 'madagiascar', url: 'http://62.72.18.244:5173/', tech: 'React · NestJS · IA', year: '2026', category: 'AI Platform', image: '/madagiascar.png' },
-  { key: 'ecoi', url: 'http://62.72.18.244:8080/', tech: 'React · NestJS · GHL', year: '2026', category: 'CRM SaaS', image: '/ecoi.png' },
+  { key: 'madagiascar', url: null, tech: 'React · NestJS · IA', year: '2026', category: 'AI Platform', image: '/madagiascar.png' },
+  { key: 'ecoi', url: null, tech: 'React · NestJS · GHL', year: '2026', category: 'CRM SaaS', image: '/ecoi.png' },
 ];
 
 const contactsBase = [
@@ -213,10 +360,12 @@ const contactsBase = [
 ];
 
 const languages = [
-  { name: 'Français', level: 95 },
-  { name: 'Anglais', level: 85 },
-  { name: 'Allemand', level: 20 },
+  { name: 'Français', levelKey: 'bilingual' },
+  { name: 'Anglais', levelKey: 'fluent' },
+  { name: 'Allemand', levelKey: 'basics' },
 ];
+
+const skillLevelKey = (level) => (level >= 88 ? 'expert' : level >= 78 ? 'advanced' : 'solid');
 
 /* ============================================================
    ICONS
@@ -315,7 +464,29 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoverPreview, setHoverPreview] = useState(null);
+  const [openProject, setOpenProject] = useState(null);
+  const [formState, setFormState] = useState('idle');
   const previewRef = useRef(null);
+
+  const onContactSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    if (data.get('bot-field')) return;
+    setFormState('sending');
+    try {
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data).toString(),
+      });
+      if (!res.ok) throw new Error('form submit failed');
+      setFormState('sent');
+      form.reset();
+    } catch {
+      setFormState('error');
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -379,7 +550,7 @@ export default function App() {
 
   return (
     <div className="shell">
-      <motion.div className="progress" style={{ scaleX }} />
+      <Motion.div className="progress" style={{ scaleX }} />
 
       <nav className={`nav container ${scrolled ? 'scrolled' : ''}`}>
         <button className="brand" onClick={() => { scrollTo('home'); setMenuOpen(false); }} aria-label="Home">
@@ -434,41 +605,42 @@ export default function App() {
         <section id="home" className="hero" ref={heroRef}>
           <div className="hero-grid">
             <div className="hero-top">
-              <motion.p
+              <Motion.p
                 className="eyebrow"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 key={`eyebrow-${lang}`}
               >
+                <span className="avail-dot" aria-hidden="true" />
                 {t.eyebrowHero}
-              </motion.p>
+              </Motion.p>
 
               <h1 className="hero-display">
                 <span className="line">
                   <span className="word-mask">
-                    <motion.span className="word" custom={0} initial="hidden" animate="visible" variants={wordVariants}>
+                    <Motion.span className="word" custom={0} initial="hidden" animate="visible" variants={wordVariants}>
                       Ratiarivony
-                    </motion.span>
+                    </Motion.span>
                   </span>
                 </span>
                 <span className="line">
                   <span className="word-mask">
-                    <motion.span className="word" custom={1} initial="hidden" animate="visible" variants={wordVariants}>
+                    <Motion.span className="word" custom={1} initial="hidden" animate="visible" variants={wordVariants}>
                       Mario
-                    </motion.span>
+                    </Motion.span>
                   </span>
                   {' '}
                   <span className="word-mask">
-                    <motion.span className="word" custom={2} initial="hidden" animate="visible" variants={wordVariants}>
+                    <Motion.span className="word" custom={2} initial="hidden" animate="visible" variants={wordVariants}>
                       <em>Mamitantely.</em>
-                    </motion.span>
+                    </Motion.span>
                   </span>
                 </span>
               </h1>
             </div>
 
-            <motion.div
+            <Motion.div
               className="portrait-wrap"
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -476,15 +648,15 @@ export default function App() {
               style={{ y: portraitYSpring }}
             >
               <div className="portrait">
-                <img src="/moi.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" />
+                <img src="/moi.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" fetchPriority="high" />
               </div>
               <div className="portrait-caption">
                 Fig. 01 — Self<br />Tana, 2026
               </div>
-            </motion.div>
+            </Motion.div>
 
             <div className="hero-bottom">
-              <motion.p
+              <Motion.p
                 className="hero-subdisplay"
                 key={`sub-${lang}`}
                 initial={{ opacity: 0, y: 18 }}
@@ -492,9 +664,9 @@ export default function App() {
                 transition={{ delay: 0.55, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
               >
                 {t.hero.sub}
-              </motion.p>
+              </Motion.p>
 
-              <motion.p
+              <Motion.p
                 className="hero-lede"
                 key={`lede-${lang}`}
                 initial={{ opacity: 0, y: 18 }}
@@ -502,9 +674,9 @@ export default function App() {
                 transition={{ delay: 0.7, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
               >
                 {t.hero.lede}
-              </motion.p>
+              </Motion.p>
 
-              <motion.div
+              <Motion.div
                 className="hero-cta-row"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -516,7 +688,7 @@ export default function App() {
                 <button className="btn btn-ghost" onClick={() => scrollTo('contact')}>
                   {t.hero.ctaContact}
                 </button>
-              </motion.div>
+              </Motion.div>
             </div>
           </div>
 
@@ -550,34 +722,76 @@ export default function App() {
           <div className="work-list">
             {projects.map((p, i) => {
               const meta = t.projects[p.key];
+              const open = openProject === p.key;
               return (
-                <motion.a
+                <Motion.article
                   key={p.key}
-                  className="work-row"
-                  href={p.url}
-                  target="_blank"
-                  rel="noreferrer"
+                  className={`work-row ${open ? 'open' : ''}`}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  onMouseEnter={() => setHoverPreview(p.image)}
-                  onMouseLeave={() => setHoverPreview(null)}
                 >
-                  <span className="work-num">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="work-title">
-                    {meta.title}
-                    <small>{p.category}</small>
-                  </span>
-                  <span className="work-meta">
-                    <span>{p.tech}</span>
-                    <span>· {p.year}</span>
-                    <span className="arrow">↗</span>
-                  </span>
-                  <div className="work-thumb-mobile">
-                    <img src={p.image} alt={meta.title} loading="lazy" />
-                  </div>
-                </motion.a>
+                  <button
+                    className="work-row-head"
+                    onClick={() => { setOpenProject(open ? null : p.key); setHoverPreview(null); }}
+                    aria-expanded={open}
+                    onMouseEnter={() => { if (!open) setHoverPreview(p.image); }}
+                    onMouseLeave={() => setHoverPreview(null)}
+                  >
+                    <span className="work-num">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="work-title">
+                      {meta.title}
+                      <small>{p.category}</small>
+                    </span>
+                    <span className="work-meta">
+                      <span>{p.tech}</span>
+                      <span>· {p.year}</span>
+                      <span className="work-plus" aria-hidden="true">{open ? '−' : '+'}</span>
+                    </span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {open && (
+                      <Motion.div
+                        className="work-detail"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
+                      >
+                        <div className="work-detail-inner">
+                          <div className="work-detail-media">
+                            <img src={p.image} alt={meta.title} loading="lazy" />
+                          </div>
+                          <div className="work-detail-body">
+                            <dl className="case-list">
+                              <div className="case-item">
+                                <dt>{t.caseLabels.context}</dt>
+                                <dd>{meta.context}</dd>
+                              </div>
+                              <div className="case-item">
+                                <dt>{t.caseLabels.build}</dt>
+                                <dd>{meta.build}</dd>
+                              </div>
+                              <div className="case-item">
+                                <dt>{t.caseLabels.result}</dt>
+                                <dd>{meta.result}</dd>
+                              </div>
+                            </dl>
+                            {p.url ? (
+                              <a className="btn btn-ghost work-visit" href={p.url} target="_blank" rel="noreferrer">
+                                {t.caseLabels.visit} <span className="arrow">↗</span>
+                              </a>
+                            ) : (
+                              <span className="private-pill">{t.caseLabels.privateDemo}</span>
+                            )}
+                          </div>
+                        </div>
+                      </Motion.div>
+                    )}
+                  </AnimatePresence>
+                </Motion.article>
               );
             })}
           </div>
@@ -590,9 +804,23 @@ export default function App() {
             <h2 className="section-title">{t.practice.title}</h2>
           </div>
 
+          <div className="stack-loop">
+            <LogoLoop
+              logos={techLogos}
+              speed={70}
+              direction="left"
+              logoHeight={34}
+              gap={56}
+              hoverSpeed={0}
+              scaleOnHover
+              fadeOut
+              ariaLabel="Technologies"
+            />
+          </div>
+
           <div className="stack-grid">
             {grouped.map(({ group, items }) => (
-              <motion.article
+              <Motion.article
                 key={group}
                 className="stack-card"
                 initial={{ opacity: 0, y: 24 }}
@@ -609,7 +837,7 @@ export default function App() {
                     <div className="stack-item" key={s.name}>
                       <b>{s.name}</b>
                       <i className="stack-bar">
-                        <motion.span
+                        <Motion.span
                           className="stack-bar-fill"
                           initial={{ scaleX: 0 }}
                           whileInView={{ scaleX: s.level / 100 }}
@@ -617,11 +845,11 @@ export default function App() {
                           transition={{ duration: 1.2, delay: j * 0.05, ease: [0.2, 0.8, 0.2, 1] }}
                         />
                       </i>
-                      <em>{s.level}</em>
+                      <em>{t.skillLevels[skillLevelKey(s.level)]}</em>
                     </div>
                   ))}
                 </div>
-              </motion.article>
+              </Motion.article>
             ))}
           </div>
 
@@ -630,8 +858,8 @@ export default function App() {
             <div className="lang-items">
               {languages.map((l) => (
                 <div className="lang-item" key={l.name}>
-                  <strong>{l.level}<span style={{ fontSize: '0.5em', verticalAlign: 'super', marginLeft: 2 }}>%</span></strong>
-                  <span>{t.langNames[l.name]}</span>
+                  <strong>{t.langNames[l.name]}</strong>
+                  <span>{t.langLevels[l.levelKey]}</span>
                 </div>
               ))}
             </div>
@@ -660,26 +888,48 @@ export default function App() {
               </div>
             </div>
 
-            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+            <form
+              className="contact-form"
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              onSubmit={onContactSubmit}
+            >
+              <input type="hidden" name="form-name" value="contact" />
+              <p className="hp-field" aria-hidden="true">
+                <label>
+                  Ne pas remplir : <input name="bot-field" tabIndex={-1} autoComplete="off" />
+                </label>
+              </p>
               <header>
                 <h3>{t.contact.formTitle}</h3>
                 <span>{t.contact.formMeta}</span>
               </header>
               <div className="field">
                 <label htmlFor="name">{t.contact.fieldName}</label>
-                <input id="name" name="name" placeholder={t.contact.placeholderName} />
+                <input id="name" name="name" placeholder={t.contact.placeholderName} required autoComplete="name" />
               </div>
               <div className="field">
                 <label htmlFor="email">{t.contact.fieldEmail}</label>
-                <input id="email" name="email" type="email" placeholder={t.contact.placeholderEmail} />
+                <input id="email" name="email" type="email" placeholder={t.contact.placeholderEmail} required autoComplete="email" />
               </div>
               <div className="field">
                 <label htmlFor="message">{t.contact.fieldMessage}</label>
-                <textarea id="message" name="message" rows="5" placeholder={t.contact.placeholderMessage} />
+                <textarea id="message" name="message" rows="5" placeholder={t.contact.placeholderMessage} required />
               </div>
-              <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
-                {t.contact.send} <span className="arrow">→</span>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                style={{ alignSelf: 'flex-start' }}
+                disabled={formState === 'sending'}
+              >
+                {formState === 'sending' ? t.contact.sending : t.contact.send} <span className="arrow">→</span>
               </button>
+              <p className={`form-status ${formState}`} role="status" aria-live="polite">
+                {formState === 'sent' && t.contact.sent}
+                {formState === 'error' && t.contact.error}
+              </p>
             </form>
           </div>
         </section>
