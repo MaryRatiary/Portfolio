@@ -116,7 +116,11 @@ img { max-width: 100%; display: block; }
 .nav {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 22px 0;
+  /* Pleine largeur d'écran : la barre déborde du gutter du shell et n'est
+     plus limitée au container centré ; le contenu garde le gutter en padding. */
+  max-width: none;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 22px var(--gutter);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   background: color-mix(in srgb, var(--bg) 80%, transparent);
