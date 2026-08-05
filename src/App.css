@@ -371,6 +371,9 @@ img { max-width: 100%; display: block; }
   bottom: 0;
   right: -7%;
   width: 106%;
+  /* le bas de la photo se fond en douceur dans le décor */
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 98%);
+  mask-image: linear-gradient(to bottom, #000 72%, transparent 98%);
   /* teinte chaude accordée au fond crème/rouille */
   filter: sepia(0.45) saturate(1.08) contrast(1.05) brightness(1.02)
           drop-shadow(0 34px 44px rgba(var(--shadow), 0.35));
