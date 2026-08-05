@@ -665,7 +665,8 @@ export default function App() {
               style={{ y: portraitYSpring }}
             >
               <div className="portrait portrait-cutout">
-                <img src="/moi-detoure.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" fetchPriority="high" />
+                <img className="portrait-back" src="/moi-detoure.png" alt="" aria-hidden="true" />
+                <img className="portrait-front" src="/moi-front.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" fetchPriority="high" />
               </div>
             </Motion.div>
 
