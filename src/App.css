@@ -311,17 +311,17 @@ img { max-width: 100%; display: block; }
 .portrait-wrap {
   position: relative;
   width: 100%;
-  max-width: 360px;
+  max-width: 480px;
   justify-self: end;
   margin: 8px 0 12px;
 }
 @media (min-width: 900px) {
-  .portrait-wrap { margin: 24px 0 0; }
+  .portrait-wrap { margin: 12px 0 0; }
 }
 @media (max-width: 899px) {
   .portrait-wrap {
     justify-self: center;
-    max-width: 260px;
+    max-width: 340px;
     margin: 4px auto 8px;
   }
 }
@@ -350,7 +350,13 @@ img { max-width: 100%; display: block; }
 }
 .portrait-cutout img {
   object-fit: contain;
-  filter: contrast(1.02) saturate(0.95) drop-shadow(0 34px 44px rgba(var(--shadow), 0.35));
+  /* teinte chaude accordée au fond crème/rouille */
+  filter: sepia(0.45) saturate(1.08) contrast(1.05) brightness(1.02)
+          drop-shadow(0 34px 44px rgba(var(--shadow), 0.35));
+}
+:root[data-theme="dark"] .portrait-cutout img {
+  filter: sepia(0.5) saturate(1.1) contrast(1.06) brightness(0.96)
+          drop-shadow(0 34px 44px rgba(var(--shadow), 0.5));
 }
 
 .portrait-caption {
