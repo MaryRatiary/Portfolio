@@ -5,6 +5,7 @@ import {
   SiN8N, SiMake, SiHubspot, SiThreedotjs, SiTailwindcss, SiBlender, SiOpenjdk, SiStripe,
 } from 'react-icons/si';
 import LogoLoop from './LogoLoop';
+import LightRays from './LightRays';
 import './App.css';
 
 /* ============================================================
@@ -603,6 +604,22 @@ export default function App() {
       <main className="container">
         {/* ===================== HERO ===================== */}
         <section id="home" className="hero" ref={heroRef}>
+          <div className="hero-rays" aria-hidden="true">
+            <LightRays
+              raysOrigin="top-center"
+              raysColor={theme === 'dark' ? '#DC7C4A' : '#B5471E'}
+              raysSpeed={1}
+              lightSpread={0.5}
+              rayLength={3}
+              followMouse={true}
+              mouseInfluence={0.1}
+              noiseAmount={0}
+              distortion={0}
+              pulsating={false}
+              fadeDistance={1}
+              saturation={1}
+            />
+          </div>
           <div className="hero-grid">
             <div className="hero-top">
               <Motion.p

@@ -198,6 +198,23 @@ img { max-width: 100%; display: block; }
   padding: clamp(20px, 4vh, 48px) 0 clamp(80px, 14vh, 160px);
   position: relative;
 }
+
+/* Fond LightRays — pleine largeur, remonte sous la nav translucide */
+.hero-rays {
+  position: absolute;
+  top: -96px;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+}
+:root[data-theme="light"] .hero-rays { opacity: 0.5; mix-blend-mode: multiply; }
+.hero-grid, .hero-meta-row { position: relative; z-index: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-rays { display: none; }
+}
 .hero-grid {
   display: grid;
   grid-template-columns: 1fr;
