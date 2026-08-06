@@ -464,13 +464,29 @@ export default function App() {
     const data = new FormData(form);
     if (data.get('bot-field')) return;
     setFormState('sending');
+    // Double envoi : email direct via FormSubmit (notification email payante chez Netlify)
+    // + Netlify Forms en secours (historique dans le dashboard). OK si l'un des deux passe.
+    const emailPost = fetch('https://formsubmit.co/ajax/maryratiary@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        name: data.get('name'),
+        email: data.get('email'),
+        message: data.get('message'),
+        _subject: `Portfolio — nouveau message de ${data.get('name')}`,
+        _template: 'table',
+        _captcha: 'false',
+      }),
+    });
+    const netlifyPost = fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString(),
+    });
     try {
-      const res = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(data).toString(),
-      });
-      if (!res.ok) throw new Error('form submit failed');
+      const results = await Promise.allSettled([emailPost, netlifyPost]);
+      const ok = results.some((r) => r.status === 'fulfilled' && r.value.ok);
+      if (!ok) throw new Error('form submit failed');
       setFormState('sent');
       form.reset();
     } catch {
