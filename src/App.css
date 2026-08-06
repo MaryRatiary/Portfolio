@@ -1120,3 +1120,102 @@ img { max-width: 100%; display: block; }
   /* Keep nav semi-transparent on mobile so the drawer blur reads consistently */
   .nav { background: color-mix(in srgb, var(--bg) 72%, transparent); }
 }
+
+/* ===================== WORK CAROUSEL + PROJECT MODAL ===================== */
+.work-carousel {
+  height: clamp(380px, 55vh, 520px);
+  margin-top: 8px;
+}
+
+.project-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: color-mix(in srgb, var(--ink) 45%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.project-modal {
+  position: relative;
+  width: min(880px, 100%);
+  max-height: min(88vh, 900px);
+  overflow-y: auto;
+  background: var(--bg);
+  border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  border-radius: 16px;
+  box-shadow: 0 40px 90px -30px color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.project-modal-close {
+  position: sticky;
+  top: 12px;
+  float: right;
+  margin: 12px 12px 0 0;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.project-modal-close:hover { background: var(--bg-2); transform: rotate(90deg); }
+
+.project-modal-media {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+  background: var(--bg-2);
+}
+.project-modal-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.project-modal-body { padding: 28px clamp(20px, 4vw, 40px) 36px; }
+
+.project-modal-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+  line-height: 1.1;
+  margin: 6px 0 10px;
+}
+
+.project-modal-tagline {
+  color: var(--ink-2);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  margin: 0 0 8px;
+}
+
+.project-modal-tech {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin: 0 0 22px;
+}
+
+.project-modal-visit { margin-top: 4px; }
+
+@media (max-width: 640px) {
+  .work-carousel { height: 340px; }
+  .project-modal { max-height: 92vh; }
+  .project-modal-body { padding: 22px 18px 28px; }
+}

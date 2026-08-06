@@ -7,6 +7,7 @@ import {
 import LogoLoop from './LogoLoop';
 import LightRays from './LightRays';
 import FoldText from './FoldText';
+import DepthCarousel from './DepthCarousel';
 import './App.css';
 
 /* ============================================================
@@ -453,10 +454,8 @@ export default function App() {
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [hoverPreview, setHoverPreview] = useState(null);
   const [openProject, setOpenProject] = useState(null);
   const [formState, setFormState] = useState('idle');
-  const previewRef = useRef(null);
 
   const onContactSubmit = async (e) => {
     e.preventDefault();
@@ -501,15 +500,18 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Pop-up projet : fermeture à Échap + verrouillage du scroll
   useEffect(() => {
-    const onMove = (e) => {
-      if (!previewRef.current) return;
-      previewRef.current.style.left = `${e.clientX}px`;
-      previewRef.current.style.top = `${e.clientY}px`;
+    if (!openProject) return;
+    const onKey = (e) => { if (e.key === 'Escape') setOpenProject(null); };
+    window.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
     };
-    window.addEventListener('mousemove', onMove);
-    return () => window.removeEventListener('mousemove', onMove);
-  }, []);
+  }, [openProject]);
 
   // Close drawer on resize to desktop
   useEffect(() => {
@@ -768,83 +770,104 @@ export default function App() {
             <h2 className="section-title">{t.work.title}</h2>
           </div>
 
-          <div className="work-list">
-            {projects.map((p, i) => {
-              const meta = t.projects[p.key];
-              const open = openProject === p.key;
-              return (
-                <Motion.article
-                  key={p.key}
-                  className={`work-row ${open ? 'open' : ''}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.5, delay: i * 0.05 }}
+          <Motion.div
+            className="work-carousel"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.6 }}
+          >
+            <DepthCarousel
+              items={projects.map((p) => ({
+                image: p.image,
+                alt: t.projects[p.key].title,
+                label: t.projects[p.key].title,
+                sub: `${p.category} · ${p.year}`,
+              }))}
+              cardWidth={460}
+              cardHeight={300}
+              radius={14}
+              tint="#1A1612"
+              depth={190}
+              spread={110}
+              tilt={20}
+              visibleCards={4}
+              falloff={0.18}
+              blur={5}
+              autoplay
+              autoplayDelay={3600}
+              onActiveCardClick={(i) => setOpenProject(projects[i].key)}
+            />
+          </Motion.div>
+        </section>
+
+        {/* ===================== PROJECT MODAL ===================== */}
+        <AnimatePresence>
+          {openProject && (() => {
+            const p = projects.find((x) => x.key === openProject);
+            const meta = t.projects[p.key];
+            return (
+              <Motion.div
+                className="project-modal-backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                onClick={() => setOpenProject(null)}
+              >
+                <Motion.div
+                  className="project-modal"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label={meta.title}
+                  initial={{ opacity: 0, y: 28, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 18, scale: 0.96 }}
+                  transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <button
-                    className="work-row-head"
-                    onClick={() => { setOpenProject(open ? null : p.key); setHoverPreview(null); }}
-                    aria-expanded={open}
-                    onMouseEnter={() => { if (!open) setHoverPreview(p.image); }}
-                    onMouseLeave={() => setHoverPreview(null)}
+                    className="project-modal-close"
+                    onClick={() => setOpenProject(null)}
+                    aria-label="Fermer"
                   >
-                    <span className="work-num">{String(i + 1).padStart(2, '0')}</span>
-                    <span className="work-title">
-                      {meta.title}
-                      <small>{p.category}</small>
-                    </span>
-                    <span className="work-meta">
-                      <span>{p.tech}</span>
-                      <span>· {p.year}</span>
-                      <span className="work-plus" aria-hidden="true">{open ? '−' : '+'}</span>
-                    </span>
+                    ×
                   </button>
-
-                  <AnimatePresence initial={false}>
-                    {open && (
-                      <Motion.div
-                        className="work-detail"
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
-                      >
-                        <div className="work-detail-inner">
-                          <div className="work-detail-media">
-                            <img src={p.image} alt={meta.title} loading="lazy" />
-                          </div>
-                          <div className="work-detail-body">
-                            <dl className="case-list">
-                              <div className="case-item">
-                                <dt>{t.caseLabels.context}</dt>
-                                <dd>{meta.context}</dd>
-                              </div>
-                              <div className="case-item">
-                                <dt>{t.caseLabels.build}</dt>
-                                <dd>{meta.build}</dd>
-                              </div>
-                              <div className="case-item">
-                                <dt>{t.caseLabels.result}</dt>
-                                <dd>{meta.result}</dd>
-                              </div>
-                            </dl>
-                            {p.url ? (
-                              <a className="btn btn-ghost work-visit" href={p.url} target="_blank" rel="noreferrer">
-                                {t.caseLabels.visit} <span className="arrow">↗</span>
-                              </a>
-                            ) : (
-                              <span className="private-pill">{t.caseLabels.privateDemo}</span>
-                            )}
-                          </div>
-                        </div>
-                      </Motion.div>
+                  <div className="project-modal-media">
+                    <img src={p.image} alt={meta.title} />
+                  </div>
+                  <div className="project-modal-body">
+                    <p className="eyebrow">{p.category} · {p.year}</p>
+                    <h3 className="project-modal-title">{meta.title}</h3>
+                    <p className="project-modal-tagline">{meta.tagline}</p>
+                    <p className="project-modal-tech">{p.tech}</p>
+                    <dl className="case-list">
+                      <div className="case-item">
+                        <dt>{t.caseLabels.context}</dt>
+                        <dd>{meta.context}</dd>
+                      </div>
+                      <div className="case-item">
+                        <dt>{t.caseLabels.build}</dt>
+                        <dd>{meta.build}</dd>
+                      </div>
+                      <div className="case-item">
+                        <dt>{t.caseLabels.result}</dt>
+                        <dd>{meta.result}</dd>
+                      </div>
+                    </dl>
+                    {p.url ? (
+                      <a className="btn btn-primary project-modal-visit" href={p.url} target="_blank" rel="noreferrer">
+                        {t.caseLabels.visit} <span className="arrow">↗</span>
+                      </a>
+                    ) : (
+                      <span className="private-pill">{t.caseLabels.privateDemo}</span>
                     )}
-                  </AnimatePresence>
-                </Motion.article>
-              );
-            })}
-          </div>
-        </section>
+                  </div>
+                </Motion.div>
+              </Motion.div>
+            );
+          })()}
+        </AnimatePresence>
 
         {/* ===================== PRACTICE ===================== */}
         <section id="practice" className="section">
@@ -995,10 +1018,6 @@ export default function App() {
         </footer>
       </main>
 
-      {/* Floating hover preview (desktop) */}
-      <div ref={previewRef} className={`work-preview ${hoverPreview ? 'active' : ''}`}>
-        {hoverPreview && <img src={hoverPreview} alt="" />}
-      </div>
     </div>
   );
 }
