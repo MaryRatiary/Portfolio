@@ -1221,7 +1221,7 @@ img { max-width: 100%; display: block; }
 .project-modal-visit { margin-top: 4px; }
 
 @media (max-width: 640px) {
-  .work-carousel { height: 320px; }
+  .work-carousel { height: 400px; }
   .project-modal { max-height: 92vh; }
   .project-modal-body { padding: 22px 18px 28px; }
 }

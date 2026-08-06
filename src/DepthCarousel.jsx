@@ -175,7 +175,9 @@ const DepthCarousel = ({
       const w = entries[0].contentRect.width;
       const cfg = cfgRef.current;
       const needed = cfg.cardWidth + Math.abs(cfg.spread) * 2 + 120;
-      scaleRef.current = clamp(w / needed, 0.4, 1);
+      // Sur écran étroit, la carte centrale occupe ~92% de la largeur (les suivantes dépassent, clippées)
+      const fill = (w * 0.92) / cfg.cardWidth;
+      scaleRef.current = clamp(Math.max(w / needed, Math.min(fill, 1)), 0.4, 1);
       layout(posRef.current);
     });
     ro.observe(root);
@@ -188,10 +190,12 @@ const DepthCarousel = ({
     const onWheel = e => {
       const cfg = cfgRef.current;
       if (cfg.count < 2) return;
+      // Seul le défilement horizontal (trackpad) pilote le carrousel ;
+      // la molette verticale continue de faire défiler la page.
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
       tweenRef.current?.kill();
-      const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      const delta = e.deltaMode === 1 ? raw * 24 : raw;
+      const delta = e.deltaMode === 1 ? e.deltaX * 24 : e.deltaX;
       const step = clamp(delta / (cfg.cardWidth * 0.9), -0.6, 0.6);
       posRef.current += step;
       layout(posRef.current);
