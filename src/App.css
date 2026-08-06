@@ -1123,9 +1123,12 @@ img { max-width: 100%; display: block; }
 
 /* ===================== WORK CAROUSEL + PROJECT MODAL ===================== */
 .work-carousel {
-  height: clamp(380px, 55vh, 520px);
-  margin-top: 8px;
+  height: clamp(400px, 48vh, 470px);
 }
+
+/* Section Projets : espacement vertical resserré autour du carrousel */
+#work { padding: clamp(44px, 7vh, 76px) 0; }
+#work .section-head { margin-bottom: clamp(16px, 3vh, 32px); }
 
 .project-modal-backdrop {
   position: fixed;
@@ -1215,7 +1218,7 @@ img { max-width: 100%; display: block; }
 .project-modal-visit { margin-top: 4px; }
 
 @media (max-width: 640px) {
-  .work-carousel { height: 340px; }
+  .work-carousel { height: 320px; }
   .project-modal { max-height: 92vh; }
   .project-modal-body { padding: 22px 18px 28px; }
 }

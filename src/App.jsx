@@ -784,12 +784,12 @@ export default function App() {
                 label: t.projects[p.key].title,
                 sub: `${p.category} · ${p.year}`,
               }))}
-              cardWidth={460}
-              cardHeight={300}
+              cardWidth={580}
+              cardHeight={375}
               radius={14}
               tint="#1A1612"
-              depth={190}
-              spread={110}
+              depth={210}
+              spread={130}
               tilt={20}
               visibleCards={4}
               falloff={0.18}
