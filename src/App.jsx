@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion as Motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { AnimatePresence, motion as Motion, useScroll, useSpring } from 'framer-motion';
 import {
   SiReact, SiNextdotjs, SiAngular, SiNestjs, SiDjango, SiDotnet, SiSymfony,
   SiN8N, SiMake, SiHubspot, SiThreedotjs, SiTailwindcss, SiBlender, SiOpenjdk, SiStripe,
@@ -445,13 +445,6 @@ export default function App() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
 
-  const heroRef = useRef(null);
-  const { scrollYProgress: heroProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
-  const portraitY = useTransform(heroProgress, [0, 1], [0, -90]);
-  const portraitYSpring = useSpring(portraitY, { stiffness: 80, damping: 22 });
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -620,7 +613,7 @@ export default function App() {
 
       <main className="container">
         {/* ===================== HERO ===================== */}
-        <section id="home" className="hero" ref={heroRef}>
+        <section id="home" className="hero">
           <div className="hero-rays" aria-hidden="true">
             <LightRays
               raysOrigin="top-center"
@@ -708,7 +701,6 @@ export default function App() {
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.45, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-              style={{ y: portraitYSpring }}
             >
               <div className="portrait portrait-cutout">
                 <img className="portrait-back" src="/moi-detoure.png" alt="" aria-hidden="true" />
