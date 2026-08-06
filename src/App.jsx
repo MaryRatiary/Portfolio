@@ -144,6 +144,12 @@ const I18N = {
         build: 'CRM SaaS React + NestJS branché sur GoHighLevel : analytics et automatisations.',
         result: 'Un outil utilisé au quotidien par les équipes commerciales.',
       },
+      tracify: {
+        title: 'Tracify', tagline: 'Plateforme de suivi publicitaire — campagnes, prospects et performance de chaque client, en direct.',
+        context: 'Centraliser la dépense publicitaire et les résultats de tous les clients d’une agence sur une seule plateforme.',
+        build: 'App Nuxt + Convex temps réel : landing produit, dashboard sécurisé (login Google), données Meta Ads.',
+        result: 'Une vue en direct par client, utilisée pour piloter les campagnes.',
+      },
     },
   },
   en: {
@@ -275,6 +281,12 @@ const I18N = {
         build: 'React + NestJS SaaS CRM wired to GoHighLevel: analytics and automations.',
         result: 'A tool used daily by the sales teams.',
       },
+      tracify: {
+        title: 'Tracify', tagline: 'Ad tracking platform — campaigns, leads and per-client performance, live.',
+        context: 'Centralizing ad spend and results for all of an agency’s clients on a single platform.',
+        build: 'Real-time Nuxt + Convex app: product landing, secured dashboard (Google login), Meta Ads data.',
+        result: 'A live per-client view used to steer campaigns.',
+      },
     },
   },
 };
@@ -330,6 +342,7 @@ const techLogos = [
 ];
 
 const projects = [
+  { key: 'tracify',  url: 'https://tracify-eta.vercel.app',   tech: 'Nuxt · Convex · Meta Ads',      year: '2026', category: 'Ads Analytics',      image: '/tracify.png' },
   { key: 'luxy',     url: 'https://luxyshop.netlify.app',     tech: 'React · Tailwind · E-Commerce', year: '2026', category: 'Luxury E-Commerce',  image: '/luxury.png' },
   { key: 'kpop',     url: 'https://kpopshop.netlify.app',     tech: 'React · Tailwind · Stripe',     year: '2026', category: 'Niche E-Commerce',   image: '/kpopshop.netlify.png' },
   { key: 'scaleas',  url: 'https://scaleas-e.netlify.app',    tech: 'React · Node · Scalable',       year: '2026', category: 'E-Commerce Platform', image: '/scale.png' },
