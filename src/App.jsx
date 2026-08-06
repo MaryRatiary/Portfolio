@@ -31,12 +31,6 @@ const I18N = {
       ctaWork: 'Voir les projets',
       ctaContact: 'Me contacter',
     },
-    meta: {
-      shipped: 'Projets livrés',
-      stacks: 'Outils maîtrisés',
-      langs: 'Langues parlées',
-      years: 'Ans jeune',
-    },
     views: 'visites',
     work: {
       eyebrow: 'Projets sélectionnés',
@@ -167,12 +161,6 @@ const I18N = {
       ),
       ctaWork: 'Selected work',
       ctaContact: 'Get in touch',
-    },
-    meta: {
-      shipped: 'Shipped projects',
-      stacks: 'Stacks mastered',
-      langs: 'Spoken languages',
-      years: 'Years young',
     },
     views: 'views',
     work: {
@@ -765,12 +753,6 @@ export default function App() {
             </div>
           </div>
 
-          <div className="hero-meta-row">
-            <div className="hero-meta"><strong>10</strong><span>{t.meta.shipped}</span></div>
-            <div className="hero-meta"><strong>17</strong><span>{t.meta.stacks}</span></div>
-            <div className="hero-meta"><strong>03</strong><span>{t.meta.langs}</span></div>
-            <div className="hero-meta"><strong>20</strong><span>{t.meta.years}</span></div>
-          </div>
         </section>
 
         {/* ===================== MARQUEE ===================== */}
