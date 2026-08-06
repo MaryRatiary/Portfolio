@@ -138,7 +138,7 @@ const I18N = {
         result: 'Une plateforme IA opérationnelle, présentée en démo privée.',
       },
       ecoi: {
-        title: 'ECOI SaaS', tagline: 'CRM SaaS intelligent avec leads, appels, RDV, analytics et automatisations commerciales.',
+        title: 'Velora', tagline: 'CRM SaaS intelligent avec leads, appels, RDV, analytics et automatisations commerciales.',
         context: 'Centraliser leads, appels et rendez-vous commerciaux d’une entreprise en croissance.',
         build: 'CRM SaaS React + NestJS branché sur GoHighLevel : analytics et automatisations.',
         result: 'Un outil utilisé au quotidien par les équipes commerciales.',
@@ -269,7 +269,7 @@ const I18N = {
         result: 'An operational AI platform, shown as a private demo.',
       },
       ecoi: {
-        title: 'ECOI SaaS', tagline: 'Smart CRM SaaS with leads, calls, appointments, analytics and sales automations.',
+        title: 'Velora', tagline: 'Smart CRM SaaS with leads, calls, appointments, analytics and sales automations.',
         context: 'Centralizing leads, calls and sales appointments for a growing company.',
         build: 'React + NestJS SaaS CRM wired to GoHighLevel: analytics and automations.',
         result: 'A tool used daily by the sales teams.',
@@ -338,7 +338,7 @@ const projects = [
   { key: 'ratiary',  url: 'https://ratiarybusiness.netlify.app', tech: 'React · Tailwind · SEO',    year: '2024', category: 'Business',           image: '/ratiarybusiness.png' },
   { key: 'rise',     url: 'https://riseplatform.netlify.app', tech: 'React · C# · Realtime',         year: '2024', category: 'Social Network',     image: '/riseplatform.png' },
   { key: 'madagiascar', url: null, tech: 'React · NestJS · IA', year: '2026', category: 'AI Platform', image: '/madagiascar.png' },
-  { key: 'ecoi', url: null, tech: 'React · NestJS · GHL', year: '2026', category: 'CRM SaaS', image: '/ecoi.png' },
+  { key: 'ecoi', url: 'https://velora.electroconceptoi.com', tech: 'React · NestJS · GHL', year: '2026', category: 'CRM SaaS', image: '/ecoi.png' },
 ];
 
 const contactsBase = [
