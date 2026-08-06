@@ -825,10 +825,7 @@ export default function App() {
                 onClick={() => setOpenProject(null)}
               >
                 <Motion.div
-                  className="project-modal"
-                  role="dialog"
-                  aria-modal="true"
-                  aria-label={meta.title}
+                  className="project-modal-wrap"
                   initial={{ opacity: 0, y: 28, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 18, scale: 0.96 }}
@@ -842,6 +839,7 @@ export default function App() {
                   >
                     ×
                   </button>
+                  <div className="project-modal" role="dialog" aria-modal="true" aria-label={meta.title}>
                   <div className="project-modal-media">
                     <img src={p.image} alt={meta.title} />
                   </div>
@@ -871,6 +869,7 @@ export default function App() {
                     ) : (
                       <span className="private-pill">{t.caseLabels.privateDemo}</span>
                     )}
+                  </div>
                   </div>
                 </Motion.div>
               </Motion.div>
