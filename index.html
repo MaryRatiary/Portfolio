@@ -110,17 +110,99 @@
       "inLanguage": ["fr", "en"]
     }
     </script>
+    <!-- ============ Preloader (styles inline : visibles avant tout chargement) ============ -->
+    <style>
+      #preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        background: #f5f1eb;
+        transition: opacity 0.55s ease;
+      }
+      :root[data-theme="dark"] #preloader { background: #14110d; }
+      #preloader.done { opacity: 0; pointer-events: none; }
+      #preloader .pl-mark {
+        font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+        font-style: italic;
+        font-size: 64px;
+        line-height: 1;
+        color: #1a1612;
+        animation: pl-breathe 1.6s ease-in-out infinite;
+      }
+      :root[data-theme="dark"] #preloader .pl-mark { color: #f2ebdc; }
+      #preloader .pl-bar {
+        width: 148px;
+        height: 2px;
+        border-radius: 999px;
+        background: rgba(26, 22, 18, 0.15);
+        overflow: hidden;
+      }
+      :root[data-theme="dark"] #preloader .pl-bar { background: rgba(242, 235, 220, 0.15); }
+      #preloader .pl-bar::before {
+        content: '';
+        display: block;
+        height: 100%;
+        width: 40%;
+        border-radius: 999px;
+        background: #b5471e;
+        animation: pl-slide 1.1s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+      }
+      :root[data-theme="dark"] #preloader .pl-bar::before { background: #dc7c4a; }
+      @keyframes pl-breathe {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.65; transform: scale(0.97); }
+      }
+      @keyframes pl-slide {
+        0% { transform: translateX(-110%); }
+        100% { transform: translateX(380%); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #preloader .pl-mark { animation: none; }
+        #preloader .pl-bar::before { animation-duration: 2s; }
+      }
+      /* Fallback SEO : lisible par les robots, invisible à l'écran */
+      .seo-fallback {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+    </style>
   </head>
   <body>
+    <script>
+      // Thème appliqué avant le premier rendu (évite le flash clair en mode sombre)
+      try {
+        var t = localStorage.getItem('theme');
+        if (t !== 'light' && t !== 'dark') {
+          t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* stockage indisponible : thème clair par défaut */ }
+    </script>
+    <noscript><style>#preloader { display: none; }</style></noscript>
+    <div id="preloader" aria-hidden="true">
+      <span class="pl-mark">M.</span>
+      <span class="pl-bar"></span>
+    </div>
     <div id="root">
       <!-- Fallback statique crawlable (remplacé par React au chargement) -->
-      <h1>Ratiarivony Mario Mamitantely — Développeur Full Stack</h1>
-      <p>
-        Mario Mamitantely Ratiarivony est un développeur full stack basé à
-        Antananarivo, Madagascar. Il conçoit des interfaces premium, des systèmes
-        automatisés N8N et des backends solides avec React, Next.js, NestJS,
-        Django et C#/ASP.Net.
-      </p>
+      <div class="seo-fallback">
+        <h1>Ratiarivony Mario Mamitantely — Développeur Full Stack</h1>
+        <p>
+          Mario Mamitantely Ratiarivony est un développeur full stack basé à
+          Antananarivo, Madagascar. Il conçoit des interfaces premium, des systèmes
+          automatisés N8N et des backends solides avec React, Next.js, NestJS,
+          Django et C#/ASP.Net.
+        </p>
+      </div>
     </div>
     <noscript>
       <h1>Ratiarivony Mario Mamitantely — Développeur Full Stack</h1>

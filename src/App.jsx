@@ -500,6 +500,15 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Preloader : fondu de sortie une fois l'app montée
+  useEffect(() => {
+    const pl = document.getElementById('preloader');
+    if (!pl) return;
+    pl.classList.add('done');
+    const timer = setTimeout(() => pl.remove(), 650);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Pop-up projet : fermeture à Échap + verrouillage du scroll
   useEffect(() => {
     if (!openProject) return;
