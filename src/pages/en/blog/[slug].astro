@@ -1,0 +1,10 @@
+---
+import Post from '../../../views/Post.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+interface Props { entry: CollectionEntry<'blog'> }
+export async function getStaticPaths() {
+  const all = await getCollection('blog', (e: CollectionEntry<'blog'>) => e.id.startsWith('en/'));
+  return all.map((entry: CollectionEntry<'blog'>) => ({ params: { slug: entry.id.split('/')[1] }, props: { entry } }));
+}
+---
+<Post lang="en" entry={(Astro.props as Props).entry} />

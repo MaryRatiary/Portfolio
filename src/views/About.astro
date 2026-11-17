@@ -1,0 +1,111 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { t, localePath, altLang, type Lang } from '../i18n/ui';
+import { breadcrumbLd, personLd, SITE } from '../lib/ld';
+import photo from '../assets/moi/moi.png';
+import photo2 from '../assets/moi/moi-detoure.png';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const path = localePath(lang, '/a-propos/');
+const crumbs = [{ name: t(lang, 'home'), url: localePath(lang, '/') }, { name: t(lang, 'nav.about'), url: path }];
+const profileLd = { '@context': 'https://schema.org', '@type': 'ProfilePage', url: new URL(path, SITE).href, inLanguage: fr ? 'fr-FR' : 'en-US', mainEntity: personLd() };
+const levels = fr ? { e: 'Expert', a: 'Avancé', s: 'Solide' } : { e: 'Expert', a: 'Advanced', s: 'Solid' };
+const skills = [
+  { g: fr ? 'Front-end' : 'Front-end', items: [['React / Next.js', 'e'], ['TypeScript', 'e'], ['Astro', 'a'], ['Vue / Nuxt', 'a'], ['TanStack', 'a'], ['React Native', 'a'], ['Angular', 's'], ['Tailwind CSS', 'e'], ['Three.js', 's']] },
+  { g: fr ? 'Back-end & données' : 'Back-end & data', items: [['Node.js / NestJS', 'e'], ['Convex', 'e'], ['Django / DRF', 'a'], ['C# / ASP.NET', 'a'], ['PostgreSQL', 'a'], ['MongoDB', 'a'], ['Symfony', 's'], ['Java', 's']] },
+  { g: fr ? 'Mise en ligne & SEO' : 'Shipping & SEO', items: [['Vercel / Netlify / Render', 'e'], ['Docker', 'a'], ['VPS Linux / Nginx', 'a'], ['SEO technique', 'a'], ['Git / GitHub', 'e']] },
+  { g: fr ? 'Automatisation & IA' : 'Automation & AI', items: [['n8n', 'e'], ['API LLM (Claude, OpenRouter)', 'a'], ['Make', 'a'], ['HubSpot / GoHighLevel', 'a']] },
+] as const;
+const langs = fr
+  ? [['Malagasy', 'Langue maternelle'], ['Français', 'Bilingue'], ['Anglais', 'Courant'], ['Allemand', 'Notions']]
+  : [['Malagasy', 'Native'], ['French', 'Bilingual'], ['English', 'Fluent'], ['German', 'Basics']];
+---
+<Base lang={lang} {path} altPath={localePath(altLang(lang), '/a-propos/')} ogType="profile"
+  title={fr ? 'À propos de Mario Ratiarivony — développeur web freelance' : 'About Mario Ratiarivony — freelance web developer'}
+  description={fr ? 'Mario Ratiarivony (Ratiarivony Mario Mamitantely), développeur web freelance à Antananarivo : parcours, compétences, langues et manière de travailler.' : 'Mario Ratiarivony (Ratiarivony Mario Mamitantely), freelance web developer in Antananarivo, Madagascar: background, skills, languages and way of working.'}
+  jsonld={[profileLd, breadcrumbLd(crumbs)]}>
+  <div class="container intro">
+    <div>
+      <Breadcrumbs items={crumbs} />
+      <p class="eyebrow">{t(lang, 'nav.about')}</p>
+      <h1>{fr ? <>Bonjour, je suis <em>Mario</em>.</> : <>Hi, I’m <em>Mario</em>.</>}</h1>
+      <div class="prose">
+        {fr ? (
+          <>
+            <p class="lede">Je m’appelle <strong>Ratiarivony Mario Mamitantely</strong>. Je suis développeur web freelance et je vis à Antananarivo, à Madagascar.</p>
+            <p>Je construis des produits web de bout en bout : la base de données, l’API, l’interface, la mise en ligne et le référencement. Mes projets récents sont des outils que des équipes utilisent tous les jours : un CRM commercial, une plateforme de suivi publicitaire pour une agence, une plateforme pour marchands de biens, un simulateur solaire relié à un tunnel publicitaire.</p>
+            <p>Je travaille à distance avec des entreprises en France et à Madagascar. Le décalage horaire est faible (1 à 2 h avec Paris) et je communique en français comme en anglais. En parallèle, je termine une licence en informatique (INSI, génie logiciel et bases de données).</p>
+            <p>En plus du web, j’intègre de l’IA et de l’automatisation quand cela fait vraiment gagner du temps : des workflows n8n, des assistants qui lisent les emails et préparent des devis, des alertes compréhensibles par des non-techniciens. Toujours avec une validation humaine.</p>
+            <h2>Ma façon de travailler</h2>
+            <ul>
+              <li><strong>Un seul interlocuteur</strong>, du cadrage à la maintenance.</li>
+              <li><strong>Des livraisons fréquentes</strong> sur un lien de test, pour corriger tôt.</li>
+              <li><strong>Un code qui vous appartient</strong>, documenté et versionné sur votre GitHub.</li>
+              <li><strong>Performance et SEO</strong> pensés dès le départ, pas ajoutés à la fin.</li>
+            </ul>
+          </>
+        ) : (
+          <>
+            <p class="lede">My name is <strong>Ratiarivony Mario Mamitantely</strong>. I’m a freelance web developer based in Antananarivo, Madagascar.</p>
+            <p>I build web products end to end: database, API, interface, deployment and SEO. My recent projects are tools teams use every day: a sales CRM, an ad-tracking platform for an agency, a platform for property dealers, and a solar simulator wired into an ad funnel.</p>
+            <p>I work remotely with companies in France, Madagascar and beyond, in English or French. Alongside client work, I am completing a computer science degree (INSI, software engineering and databases).</p>
+            <p>On top of web development, I integrate AI and automation where it truly saves time: n8n workflows, assistants that read emails and draft quotes, alerts that non-technical people understand. Always with a human in the loop.</p>
+            <h2>How I work</h2>
+            <ul>
+              <li><strong>One point of contact</strong>, from scoping to maintenance.</li>
+              <li><strong>Frequent deliveries</strong> on a staging link, so we fix things early.</li>
+              <li><strong>You own the code</strong>, documented and versioned on your GitHub.</li>
+              <li><strong>Performance and SEO</strong> built in from day one.</li>
+            </ul>
+          </>
+        )}
+      </div>
+    </div>
+    <div class="photos">
+      <Image src={photo2} alt={fr ? 'Mario Ratiarivony en costume' : 'Mario Ratiarivony in a suit'} widths={[300, 450, 600]} sizes="(min-width: 900px) 360px, 70vw" loading="eager" />
+      <Image class="small" src={photo} alt={fr ? 'Mario Ratiarivony, portrait souriant' : 'Mario Ratiarivony, smiling portrait'} widths={[200, 400]} sizes="200px" />
+    </div>
+  </div>
+  <section class="container block">
+    <h2>{fr ? 'Compétences' : 'Skills'}</h2>
+    <div class="skills">
+      {skills.map((s) => (
+        <div>
+          <h3>{s.g}</h3>
+          <ul>{s.items.map(([n, l]) => <li><span>{n}</span><span class={`lvl ${l}`}>{levels[l]}</span></li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section class="container block">
+    <h2>{fr ? 'Langues' : 'Languages'}</h2>
+    <ul class="langs">{langs.map(([n, l]) => <li><span class="ln">{n}</span><span class="mono">{l}</span></li>)}</ul>
+    <p class="cta"><a class="btn btn-primary" href={localePath(lang, '/contact/')}>{t(lang, 'cta.project')} <span class="arrow" aria-hidden="true">→</span></a>
+    <a class="btn btn-ghost" href={localePath(lang, '/projets/')}>{t(lang, 'cta.work')}</a></p>
+  </section>
+</Base>
+<style>
+  .intro { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 88px); padding-top: clamp(28px, 5vw, 56px); }
+  .intro h1 { margin: 16px 0 28px; }
+  .photos { position: relative; align-self: start; padding-top: 80px; }
+  .photos :global(img) { border-radius: 200px 200px 16px 16px; background: radial-gradient(120% 80% at 50% 0%, var(--rust), var(--paper-2)); }
+  .photos :global(.small) { position: absolute; width: 42%; left: -14%; bottom: -6%; border-radius: 50%; border: 6px solid var(--paper); background: var(--paper-2); }
+  .block { padding-block: clamp(48px, 7vw, 88px); border-top: 1px solid var(--line); margin-top: clamp(48px, 7vw, 88px); }
+  .block h2 { font-size: var(--step-3); margin-bottom: 32px; }
+  .skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .skills h3 { font: 600 var(--step-0)/1.3 var(--sans); margin-bottom: 14px; }
+  .skills ul { list-style: none; padding: 0; margin: 0; }
+  .skills li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 0.95rem; }
+  .lvl { font: 500 0.72rem/1.6 var(--mono); color: var(--muted); }
+  .lvl.e { color: var(--rust); }
+  .langs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .langs li { display: grid; gap: 4px; border-top: 2px solid var(--ink); padding-top: 12px; }
+  .ln { font: 400 var(--step-2)/1.1 var(--serif); }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 48px; }
+  @media (max-width: 960px) { .skills, .langs { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 860px) { .intro { grid-template-columns: 1fr; } .photos { width: min(80%, 360px); margin: 0 auto; padding-top: 0; } }
+  @media (max-width: 520px) { .skills { grid-template-columns: 1fr; } }
+</style>

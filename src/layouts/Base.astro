@@ -1,0 +1,37 @@
+---
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+import Seo, { type SeoProps } from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { t } from '../i18n/ui';
+type Props = SeoProps;
+const props = Astro.props as Props;
+const { lang } = props;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>(()=>{try{const s=localStorage.getItem('theme');const d=s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.dataset.theme=d?'dark':'light'}catch(e){}})()</script>
+    <meta name="theme-color" content="#f5f1eb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#13100d" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="author" content="Ratiarivony Mario Mamitantely" />
+    <Seo {...props} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#main">{t(lang, 'skip')}</a>
+    <Header lang={lang} path={props.path} altPath={props.altPath} />
+    <main id="main"><slot /></main>
+    <Footer lang={lang} />
+  </body>
+</html>

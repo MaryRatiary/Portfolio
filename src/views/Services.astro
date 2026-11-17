@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import { t, localePath, altLang, type Lang } from '../i18n/ui';
+import { services } from '../lib/content';
+import { breadcrumbLd } from '../lib/ld';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const svc = await services(lang);
+const path = localePath(lang, '/services/');
+const crumbs = [{ name: t(lang, 'home'), url: localePath(lang, '/') }, { name: 'Services', url: path }];
+---
+<Base lang={lang} {path} altPath={localePath(altLang(lang), '/services/')}
+  title={fr ? 'Services de développement web freelance | Mario Ratiarivony' : 'Freelance web development services | Mario Ratiarivony'}
+  description={fr ? 'Création de sites web sur mesure, d’applications web et de SaaS, SEO technique, automatisation et intégration IA : les services de Mario Ratiarivony.' : 'Custom websites, web applications and SaaS, technical SEO, automation and AI integration: the services offered by freelance developer Mario Ratiarivony.'}
+  jsonld={[breadcrumbLd(crumbs)]}>
+  <header class="container head">
+    <Breadcrumbs items={crumbs} />
+    <p class="eyebrow">Services</p>
+    <h1>{fr ? <>Du site vitrine <em>au SaaS</em></> : <>From showcase site <em>to SaaS</em></>}</h1>
+    <p class="lede">{fr ? 'Je m’occupe de tout le cycle : cadrage, design des écrans, développement front et back, mise en ligne, SEO et maintenance. Vous avez un seul interlocuteur du début à la fin.' : 'I handle the whole cycle: scoping, screen design, front-end and back-end development, launch, SEO and maintenance. One point of contact from start to finish.'}</p>
+  </header>
+  <section class="container grid">{svc.map((s, i) => <ServiceCard s={s} lang={lang} index={i} />)}</section>
+</Base>
+<style>
+  .head { padding-top: clamp(28px, 5vw, 56px); display: grid; gap: 16px; margin-bottom: 48px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding-bottom: clamp(64px, 9vw, 120px); }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+</style>

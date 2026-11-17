@@ -1,0 +1,5 @@
+---
+interface Props { items: object[] }
+const { items } = Astro.props;
+---
+{items.map((i) => <script type="application/ld+json" set:html={JSON.stringify(i)} />)}

@@ -1,0 +1,221 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { t, localePath, type Lang } from '../i18n/ui';
+import { projets, services, posts, slugOf } from '../lib/content';
+import { businessLd } from '../lib/ld';
+import portrait from '../assets/moi/moi2.png';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const L = (p: string) => localePath(lang, p);
+
+const all = await projets(lang);
+const featured = all.filter((p) => p.data.featured).sort((a, b) => a.data.featured! - b.data.featured!);
+const web = all.filter((p) => p.data.kind === 'web' && !p.data.featured);
+const ia = all.filter((p) => p.data.kind === 'ia');
+const svc = await services(lang);
+const latest = (await posts(lang)).slice(0, 3);
+
+const stack = ['React', 'Next.js', 'Astro', 'Vue', 'Nuxt', 'TypeScript', 'Node.js', 'NestJS', 'Django', 'Convex', 'PostgreSQL', 'MongoDB', 'Tailwind', 'Three.js', 'n8n', 'Docker', 'Vercel', 'Netlify'];
+
+const steps = fr
+  ? [
+      ['Échange', 'Un appel de 30 minutes pour comprendre votre activité, vos objectifs et vos contraintes.'],
+      ['Maquette & devis', 'Une proposition claire : périmètre, maquette des écrans clés, délai et prix fixe.'],
+      ['Développement', 'Des livraisons par étapes que vous testez au fur et à mesure, sur un lien de préproduction.'],
+      ['Mise en ligne & suivi', 'Déploiement, SEO technique, formation, puis maintenance si vous le souhaitez.'],
+    ]
+  : [
+      ['Discovery call', 'A 30-minute call to understand your business, goals and constraints.'],
+      ['Mock-up & quote', 'A clear proposal: scope, key screen mock-ups, timeline and a fixed price.'],
+      ['Build', 'Step-by-step deliveries you can test as we go on a staging link.'],
+      ['Launch & support', 'Deployment, technical SEO, handover, then maintenance if you need it.'],
+    ];
+
+const title = fr ? 'Mario Ratiarivony — Développeur web freelance (React, SaaS)' : 'Mario Ratiarivony — Freelance web developer (React, SaaS)';
+const description = fr
+  ? 'Développeur web freelance à Madagascar : sites sur mesure, applications web et SaaS pour des clients en France et à Madagascar. Devis rapide et clair.'
+  : 'Freelance web developer based in Madagascar: custom websites, web apps and SaaS for clients in France and worldwide. Fast, clear quotes.';
+---
+<Base lang={lang} path={L('/')} altPath={localePath(fr ? 'en' : 'fr', '/')} {title} {description} jsonld={[businessLd(lang)]}>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <p class="badge"><span class="dot" aria-hidden="true"></span>{t(lang, 'available')}</p>
+        <h1>
+          <span class="h1-name">Mario Ratiarivony</span>
+          <span class="h1-role">{fr ? <>Développeur web <em>freelance</em></> : <>Freelance <em>web developer</em></>}</span>
+        </h1>
+        <p class="lede">
+          {fr
+            ? 'Je conçois et développe des sites sur mesure, des applications web et des SaaS rapides, bien référencés et faciles à faire évoluer. Basé à Antananarivo, je travaille à distance avec des entreprises en France et à Madagascar.'
+            : 'I design and build fast, search-friendly custom websites, web apps and SaaS that are easy to grow. Based in Antananarivo, I work remotely with companies in France, Madagascar and beyond.'}
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#work">{t(lang, 'cta.work')} <span class="arrow" aria-hidden="true">↓</span></a>
+          <a class="btn btn-ghost" href={L('/contact/')}>{t(lang, 'cta.project')}</a>
+        </div>
+        <ul class="facts mono">
+          <li>{fr ? 'Sites & SaaS en production' : 'Sites & SaaS in production'}</li>
+          <li>{fr ? 'SEO technique inclus' : 'Technical SEO included'}</li>
+          <li>{fr ? 'Français · English' : 'English · Français'}</li>
+        </ul>
+      </div>
+      <div class="hero-photo">
+        <div class="disc" aria-hidden="true"></div>
+        <Image src={portrait} alt={fr ? 'Portrait de Mario Ratiarivony, développeur web freelance' : 'Portrait of Mario Ratiarivony, freelance web developer'} widths={[320, 480, 640]} sizes="(min-width: 900px) 420px, 70vw" loading="eager" fetchpriority="high" />
+      </div>
+    </div>
+    <div class="marquee" aria-label={fr ? 'Technologies maîtrisées' : 'Technologies'}>
+      <ul class="track mono">{[...stack, ...stack].map((s, i) => <li aria-hidden={i >= stack.length ? 'true' : undefined}>{s}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="section" id="work">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">{fr ? 'Réalisations à la une' : 'Featured work'}</p>
+        <h2>{fr ? <>Des produits web <em>utilisés chaque jour</em>.</> : <>Web products <em>used every day</em>.</>}</h2>
+      </header>
+      <div class="featured">
+        {featured.map((p, i) => <ProjectCard p={p} lang={lang} size="xl" eager={i === 0} />)}
+      </div>
+      <h3 class="sub">{fr ? 'Autres sites et applications' : 'More websites and apps'}</h3>
+      <div class="grid-3">
+        {web.map((p) => <ProjectCard p={p} lang={lang} size="sm" />)}
+      </div>
+      <p class="all"><a class="btn btn-ghost" href={L('/projets/')}>{fr ? 'Toutes les réalisations' : 'All projects'} <span class="arrow" aria-hidden="true">→</span></a></p>
+    </div>
+  </section>
+
+  {ia.length > 0 && (
+    <section class="section band">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">{fr ? 'En complément' : 'On top of that'}</p>
+          <h2>{fr ? <>Intégration IA & <em>automatisation</em>.</> : <>AI integration & <em>automation</em>.</>}</h2>
+          <p class="lede">
+            {fr
+              ? 'En plus du développement web, j’intègre des assistants IA et des workflows n8n dans les outils existants : lecture des emails, création de devis, alertes, prospection. Des systèmes concrets, en production, avec validation humaine.'
+              : 'Alongside web development, I plug AI assistants and n8n workflows into existing tools: reading emails, drafting quotes, alerts, outbound prospecting. Concrete systems running in production, with a human in the loop.'}
+          </p>
+        </header>
+        <div class="grid-3">{ia.map((p) => <ProjectCard p={p} lang={lang} size="sm" />)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">Services</p>
+        <h2>{fr ? <>Ce que je fais <em>pour vous</em>.</> : <>What I can <em>do for you</em>.</>}</h2>
+      </header>
+      <div class="grid-3">{svc.map((s, i) => <ServiceCard s={s} lang={lang} index={i} />)}</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">{fr ? 'Méthode' : 'Process'}</p>
+        <h2>{fr ? <>Simple, transparent, <em>sans surprise</em>.</> : <>Simple, transparent, <em>no surprises</em>.</>}</h2>
+      </header>
+      <ol class="steps">
+        {steps.map(([h, p], i) => (
+          <li class="reveal"><span class="mono">0{i + 1}</span><h3>{h}</h3><p>{p}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {latest.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Blog</p>
+          <h2>{fr ? <>Conseils pour <em>votre projet web</em>.</> : <>Advice for <em>your web project</em>.</>}</h2>
+        </header>
+        <ul class="posts">
+          {latest.map((p) => (
+            <li>
+              <a href={L(`/blog/${slugOf(p)}/`)}>
+                <time class="mono" datetime={p.data.date.toISOString()}>{p.data.date.toLocaleDateString(fr ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time>
+                <span class="pt">{p.data.title}</span>
+                <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="section" id="contact">
+    <div class="container contact-grid">
+      <header class="section-head">
+        <p class="eyebrow">Contact</p>
+        <h2>{fr ? <>Parlons de <em>votre projet</em>.</> : <>Let’s talk about <em>your project</em>.</>}</h2>
+        <p class="lede">{fr ? 'Décrivez votre besoin en quelques lignes : je vous réponds sous 24 h ouvrées avec une première approche et une estimation.' : 'Describe your needs in a few lines: I reply within one business day with a first approach and an estimate.'}</p>
+        <p class="mono muted"><a href="mailto:maryratiary@gmail.com">maryratiary@gmail.com</a></p>
+      </header>
+      <ContactForm lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-top: clamp(28px, 6vw, 72px); overflow: hidden; }
+  .hero-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: clamp(24px, 5vw, 64px); align-items: end; }
+  .badge { display: inline-flex; align-items: center; gap: 10px; font: 500 var(--step--1)/1 var(--mono); padding: 8px 14px; border: 1px solid var(--line-strong); border-radius: 999px; margin-bottom: 28px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #3a9a5b; box-shadow: 0 0 0 4px #3a9a5b29; }
+  h1 { display: grid; gap: 4px; }
+  .h1-name { font-size: var(--step-5); }
+  .h1-role { font-size: var(--step-4); color: var(--ink-2); }
+  .hero-text .lede { margin: 28px 0 32px; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 22px; list-style: none; padding: 0; margin: 36px 0 0; color: var(--muted); }
+  .facts li::before { content: '✓ '; color: var(--rust); }
+  .hero-photo { position: relative; justify-self: center; width: min(100%, 440px); align-self: end; }
+  .disc { position: absolute; inset: 14% 4% 0; border-radius: 999px 999px 24px 24px; background: radial-gradient(120% 90% at 50% 10%, var(--rust) 0%, #c9773f 45%, var(--paper-2) 100%); opacity: 0.9; }
+  .hero-photo :global(img) { position: relative; width: 100%; height: auto; filter: drop-shadow(0 24px 30px #1a161233); }
+  .marquee { margin-top: clamp(32px, 6vw, 64px); border-block: 1px solid var(--line); overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .track { display: flex; gap: 44px; width: max-content; list-style: none; margin: 0; padding: 18px 0; color: var(--ink-2); animation: scroll 40s linear infinite; }
+  .track li::after { content: '✳'; margin-left: 44px; color: var(--rust); }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+  .featured { display: grid; gap: clamp(48px, 8vw, 96px); }
+  .sub { font-size: var(--step-2); margin: clamp(64px, 9vw, 112px) 0 28px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 3vw, 40px); }
+  .all { margin-top: 48px; }
+  .band { --paper: #f5f1eb; background: #1a1612; color: #f5f1eb; border-top: 0; }
+  :global([data-theme='dark']) .band { background: #221d18; }
+  .band :global(.eyebrow), .band .lede { color: color-mix(in srgb, var(--paper) 72%, transparent); }
+  .band :global(.card .tagline), .band :global(.card .meta) { color: color-mix(in srgb, var(--paper) 70%, transparent); }
+  .band :global(.tags li) { color: var(--paper); border-color: color-mix(in srgb, var(--paper) 30%, transparent); }
+  .band :global(.media) { border-color: #ffffff1f; }
+  .band h2 :global(em), .band :global(h3 a:hover) { color: #e8855a; }
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; counter-reset: s; }
+  .steps li { border-top: 2px solid var(--ink); padding-top: 18px; }
+  .steps .mono { color: var(--rust); }
+  .steps h3 { font-size: var(--step-2); margin: 10px 0; }
+  .steps p { color: var(--ink-2); margin: 0; }
+  .posts { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+  .posts a { display: grid; grid-template-columns: 180px 1fr auto; gap: 24px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .posts .pt { font: 400 var(--step-2)/1.2 var(--serif); }
+  .posts time { color: var(--muted); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+  @media (max-width: 1000px) { .grid-3 { grid-template-columns: 1fr 1fr; } .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 860px) {
+    .hero-grid, .contact-grid { grid-template-columns: 1fr; }
+    .hero-photo { width: min(78%, 360px); order: -1; }
+  }
+  @media (max-width: 620px) {
+    .grid-3, .steps { grid-template-columns: 1fr; }
+    .posts a { grid-template-columns: 1fr auto; } .posts time { grid-column: 1 / -1; }
+  }
+</style>

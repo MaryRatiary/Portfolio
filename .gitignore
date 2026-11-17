@@ -25,3 +25,13 @@ dist-ssr
 
 # Claude Code local
 .claude/
+# Boîte à outils (clés locales)
+.env.boite*
+.superpowers/
+
+.astro/
+public/og/
+
+# Docs de travail et liste confidentielle : restent en local
+docs/superpowers/
+.confidentiel

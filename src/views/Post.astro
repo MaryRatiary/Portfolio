@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { t, localePath, altLang, type Lang } from '../i18n/ui';
+import { slugOf, type Post } from '../lib/content';
+import { breadcrumbLd, PERSON_ID, SITE } from '../lib/ld';
+interface Props { lang: Lang; entry: Post }
+const { lang, entry } = Astro.props;
+const fr = lang === 'fr';
+const d = entry.data;
+const slug = slugOf(entry);
+const path = localePath(lang, `/blog/${slug}/`);
+const alt = d.translation ? localePath(altLang(lang), `/blog/${d.translation}/`) : localePath(altLang(lang), '/blog/');
+const crumbs = [{ name: t(lang, 'home'), url: localePath(lang, '/') }, { name: 'Blog', url: localePath(lang, '/blog/') }, { name: d.title, url: path }];
+const words = (entry.body ?? '').split(/\s+/).length;
+const postLd = {
+  '@context': 'https://schema.org', '@type': 'BlogPosting', headline: d.title, description: d.description,
+  author: { '@id': PERSON_ID }, publisher: { '@id': PERSON_ID }, datePublished: d.date.toISOString(),
+  dateModified: (d.updated ?? d.date).toISOString(), inLanguage: fr ? 'fr-FR' : 'en-US', wordCount: words,
+  mainEntityOfPage: new URL(path, SITE).href, image: new URL(`/og/${path.replace(/^\/|\/$/g, '').replaceAll('/', '-')}.png`, SITE).href,
+  keywords: d.tags.join(', '),
+};
+---
+<Base lang={lang} {path} altPath={alt} title={d.seoTitle} description={d.description} ogType="article" jsonld={[postLd, breadcrumbLd(crumbs)]}>
+  <article class="narrow post">
+    <Breadcrumbs items={crumbs} />
+    <p class="eyebrow"><time datetime={d.date.toISOString()}>{d.date.toLocaleDateString(fr ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time> · {Math.max(1, Math.round(words / 220))} min</p>
+    <h1>{d.title}</h1>
+    <div class="prose" set:html={entry.rendered?.html} />
+    <aside class="author">
+      <p><strong>Mario Ratiarivony</strong> — {fr ? 'développeur web freelance à Antananarivo. Je crée des sites, des applications web et des SaaS pour des clients en France et à Madagascar.' : 'freelance web developer in Antananarivo. I build websites, web apps and SaaS for clients in France, Madagascar and beyond.'}</p>
+      <a class="btn btn-primary" href={localePath(lang, '/contact/')}>{t(lang, 'cta.project')} <span class="arrow" aria-hidden="true">→</span></a>
+    </aside>
+  </article>
+</Base>
+<style>
+  .post { padding-block: clamp(28px, 5vw, 56px) clamp(64px, 9vw, 120px); }
+  .post h1 { font-size: var(--step-4); margin: 12px 0 36px; }
+  .author { margin-top: 56px; padding: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); display: grid; gap: 16px; justify-items: start; }
+  .author p { margin: 0; color: var(--ink-2); }
+</style>

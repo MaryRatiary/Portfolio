@@ -1,0 +1,121 @@
+{
+ "greengarden": [
+  "01-accueil.png",
+  "02-bungalows.png",
+  "03-galerie.png",
+  "04-reservation.png",
+  "05-mobile-accueil.png",
+  "06-mobile-bungalows.png"
+ ],
+ "campus": [
+  "07-tableau-de-bord-sombre.png",
+  "01-catalogue.png",
+  "02-lecture-cours.png",
+  "03-quiz.png",
+  "05-espace-enseignant-suivi.png",
+  "04-certificat.png",
+  "06-mobile-catalogue.png"
+ ],
+ "velvet": [
+  "01-accueil.png",
+  "02-accueil-suite.png",
+  "10-fiche-destination.png",
+  "11-fiche-resort.png",
+  "12-formulaire-contact.png",
+  "03-mobile.png",
+  "13-mobile-fiche-destination.png"
+ ],
+ "simulateur": [
+  "01-accueil.png"
+ ],
+ "pcmi": [
+  "01-accueil.png"
+ ],
+ "agent-transport": [
+  "code-01-aiguillage-mail.png",
+  "code-02-garde-anti-invention.png",
+  "code-03-apercu-validation.png"
+ ],
+ "traducteur-alertes": [
+  "code-01-traduction-alerte.png"
+ ],
+ "luxy": [
+  "01-accueil.png",
+  "02-suite.png",
+  "03-mobile.png"
+ ],
+ "kpop": [
+  "01-accueil.png",
+  "02-suite.png",
+  "03-mobile.png"
+ ],
+ "allstone": [
+  "01-accueil.png",
+  "02-suite.png",
+  "03-mobile.png"
+ ],
+ "aveny": [
+  "01-accueil.png"
+ ],
+ "rise": [
+  "01-accueil.png"
+ ],
+ "tracify": [
+  "10-vue-ensemble-agence.png",
+  "11-graphiques-et-clients.png",
+  "12-fiche-client.png",
+  "14-campagne-performance.png",
+  "15-creatives-performantes.png",
+  "16-portail-client.png",
+  "17-portail-client-prospects.png",
+  "18-mobile-vue-ensemble.png",
+  "19-mobile-portail-client.png",
+  "01-accueil.png",
+  "code-01-webhook-leads.png",
+  "code-02-code-acces-client.png"
+ ],
+ "prospection-b2b": [
+  "code-01-scoring.png",
+  "code-02-surveillance-alertes.png"
+ ],
+ "velora": [
+  "10-tableau-de-bord.png",
+  "11-statistiques.png",
+  "12-prospects.png",
+  "13-fiche-prospect.png",
+  "14-parametres-equipe.png",
+  "15-agenda-rdv.png",
+  "16-appel-en-cours.png",
+  "20-statistiques-sombre.png",
+  "01-accueil.png",
+  "02-accueil-suite.png",
+  "code-01-client-crm-reessais.png",
+  "code-02-agregats-lead.png"
+ ],
+ "atlas": [
+  "10-simulation-etape-bien.png",
+  "11-simulation-resultat.png",
+  "12-depot-dossier-pieces.png",
+  "13-admin-prospects-filtres.png",
+  "14-admin-fiche-dossier.png",
+  "16-espace-marchand.png",
+  "01-accueil.png",
+  "02-accueil-suite.png",
+  "04-prototype.png",
+  "03-mobile.png",
+  "code-01-grille-notation.png",
+  "code-02-alertes-equipe.png"
+ ],
+ "madagiascar": [
+  "01-accueil.png"
+ ],
+ "mada-skills": [
+  "02-tableau-de-bord.png",
+  "01-accueil.png",
+  "03-talents.png",
+  "04-quiz.png",
+  "05-messages.png",
+  "06-certificat-verifie.png",
+  "07-mobile-tableau-de-bord.png"
+ ]
+}

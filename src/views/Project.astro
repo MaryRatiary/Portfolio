@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Gallery from '../components/Gallery.astro';
+import { t, localePath, altLang, type Lang } from '../i18n/ui';
+import { projets, slugOf, kindLabel, type Projet } from '../lib/content';
+import { breadcrumbLd, PERSON_ID, SITE } from '../lib/ld';
+import { getImage } from 'astro:assets';
+
+interface Props { lang: Lang; entry: Projet }
+const { lang, entry } = Astro.props;
+const fr = lang === 'fr';
+const d = entry.data;
+const slug = slugOf(entry);
+const path = localePath(lang, `/projets/${slug}/`);
+const all = await projets(lang);
+const others = all.filter((p) => p.data.kind === d.kind && slugOf(p) !== slug);
+const next = others.find((p) => p.data.order > d.order) ?? others[0];
+const crumbs = [
+  { name: t(lang, 'home'), url: localePath(lang, '/') },
+  { name: t(lang, 'nav.projects'), url: localePath(lang, '/projets/') },
+  { name: d.title, url: path },
+];
+const cover = await getImage({ src: d.cover, width: 1200, format: 'jpg' });
+const workLd = {
+  '@context': 'https://schema.org', '@type': 'CreativeWork', name: d.title, headline: d.tagline,
+  description: d.seoDescription, creator: { '@id': PERSON_ID }, dateCreated: d.year, inLanguage: fr ? 'fr-FR' : 'en-US',
+  image: new URL(cover.src, SITE).href, url: new URL(path, SITE).href, keywords: d.stack.join(', '),
+  ...(d.url ? { sameAs: d.url } : {}),
+};
+const sections = fr
+  ? [['Contexte', d.context], ['Ce que j’ai construit', d.built], ['Résultat', d.result]]
+  : [['Context', d.context], ['What I built', d.built], ['Outcome', d.result]];
+---
+<Base lang={lang} {path} altPath={localePath(altLang(lang), `/projets/${slug}/`)} title={d.seoTitle} description={d.seoDescription} ogType="article" jsonld={[workLd, breadcrumbLd(crumbs)]}>
+  <article>
+    <header class="head container">
+      <Breadcrumbs items={crumbs} />
+      <p class="eyebrow">{kindLabel(lang, d.kind)} · {d.year}</p>
+      <h1>{d.title}</h1>
+      <p class="lede">{d.tagline}</p>
+      <dl class="facts">
+        <div><dt>{fr ? 'Client' : 'Client'}</dt><dd>{d.client}</dd></div>
+        {d.role && <div><dt>{fr ? 'Mon rôle' : 'My role'}</dt><dd>{d.role}</dd></div>}
+        <div><dt>{fr ? 'Année' : 'Year'}</dt><dd>{d.year}</dd></div>
+        <div><dt>Stack</dt><dd><ul class="tags">{d.stack.map((s) => <li>{s}</li>)}</ul></dd></div>
+      </dl>
+      <p>
+        {d.url
+          ? <a class="btn btn-primary" href={d.url} target="_blank" rel="noopener">{fr ? 'Voir le site en ligne' : 'Visit the live site'} <span class="arrow" aria-hidden="true">↗</span></a>
+          : <span class="private mono">{fr ? 'Projet privé · démonstration sur demande' : 'Private project · demo on request'}</span>}
+      </p>
+    </header>
+
+    <div class="container story">
+      {sections.map(([h, txt]) => (
+        <section class="reveal"><h2>{h}</h2><p>{txt}</p></section>
+      ))}
+    </div>
+
+    {entry.body && <div class="narrow prose details" set:html={entry.rendered?.html} />}
+
+    <section class="container shots" aria-labelledby="galerie">
+      <h2 id="galerie">{fr ? 'En images' : 'Gallery'}</h2>
+      <Gallery items={d.gallery} lang={lang} />
+    </section>
+
+    <nav class="container next" aria-label={fr ? 'Projet suivant' : 'Next project'}>
+      {next && (
+        <a href={localePath(lang, `/projets/${slugOf(next)}/`)}>
+          <span class="eyebrow">{fr ? 'Projet suivant' : 'Next project'}</span>
+          <span class="nt">{next.data.title} <span aria-hidden="true">→</span></span>
+        </a>
+      )}
+      <a class="btn btn-ghost" href={localePath(lang, '/contact/')}>{t(lang, 'cta.project')}</a>
+    </nav>
+  </article>
+</Base>
+<style>
+  .head { padding-top: clamp(28px, 5vw, 56px); display: grid; gap: 18px; }
+  .head h1 { font-size: var(--step-5); }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px 32px; margin: 16px 0; padding: 22px 0; border-block: 1px solid var(--line); }
+  .facts dt { font: 500 0.75rem/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 6px; }
+  .facts dd { margin: 0; }
+  .facts div:last-child { grid-column: span 2; }
+  .private { display: inline-block; padding: 10px 14px; border: 1px dashed var(--line-strong); border-radius: 999px; color: var(--muted); }
+  .story { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 4vw, 56px); padding-block: clamp(48px, 7vw, 96px); }
+  .story h2 { font-size: var(--step-2); margin-bottom: 12px; padding-top: 14px; border-top: 2px solid var(--ink); }
+  .story p { color: var(--ink-2); }
+  .details { padding-bottom: 48px; }
+  .shots h2 { font-size: var(--step-3); margin-bottom: 28px; }
+  .next { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; padding-block: clamp(64px, 9vw, 120px); margin-top: clamp(48px, 7vw, 96px); border-top: 1px solid var(--line); }
+  .next a:first-child { text-decoration: none; display: grid; gap: 8px; }
+  .nt { font: 400 var(--step-4)/1 var(--serif); }
+  .next a:first-child:hover .nt { color: var(--rust); }
+  @media (max-width: 860px) { .story { grid-template-columns: 1fr; } .facts div:last-child { grid-column: auto; } }
+</style>

@@ -1,0 +1,61 @@
+---
+import type { Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const L = fr
+  ? { name: 'Nom', email: 'Email', company: 'Entreprise (facultatif)', message: 'Votre projet', ph: 'Objectif, délais, budget approximatif, liens utiles…', send: 'Envoyer le message', sending: 'Envoi…', ok: 'Merci, votre message est bien parti. Je vous réponds sous 24 h ouvrées.', ko: 'L’envoi a échoué. Écrivez-moi directement à maryratiary@gmail.com.' }
+  : { name: 'Name', email: 'Email', company: 'Company (optional)', message: 'Your project', ph: 'Goal, timeline, rough budget, useful links…', send: 'Send message', sending: 'Sending…', ok: 'Thanks, your message is on its way. I reply within one business day.', ko: 'Sending failed. Email me directly at maryratiary@gmail.com.' };
+---
+<form class="contact-form" name="contact" method="POST" action={fr ? '/contact/merci/' : '/en/contact/thanks/'} data-netlify="true" netlify-honeypot="bot-field" data-ok={L.ok} data-ko={L.ko} data-sending={L.sending}>
+  <input type="hidden" name="form-name" value="contact" />
+  <p class="visually-hidden"><label>Ne pas remplir <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+  <div class="row">
+    <label>{L.name}<input name="name" required autocomplete="name" /></label>
+    <label>{L.email}<input name="email" type="email" required autocomplete="email" /></label>
+  </div>
+  <label>{L.company}<input name="company" autocomplete="organization" /></label>
+  <label>{L.message}<textarea name="message" rows="6" required placeholder={L.ph}></textarea></label>
+  <button class="btn btn-primary" type="submit">{L.send} <span class="arrow" aria-hidden="true">→</span></button>
+  <p class="status" role="status" aria-live="polite"></p>
+</form>
+<script>
+  document.querySelectorAll<HTMLFormElement>('form.contact-form').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      const status = form.querySelector<HTMLElement>('.status')!;
+      const data = new FormData(form);
+      if (data.get('bot-field')) return;
+      const label = btn.innerHTML;
+      btn.disabled = true; btn.textContent = form.dataset.sending!;
+      const fields = Object.fromEntries([...data.entries()].filter(([k]) => !['form-name', 'bot-field'].includes(k)));
+      const results = await Promise.allSettled([
+        fetch('https://formsubmit.co/ajax/maryratiary@gmail.com', {
+          method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ ...fields, _subject: 'Portfolio — nouveau message', _template: 'table' }),
+        }).then((r) => { if (!r.ok) throw new Error(); }),
+        fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data as any).toString() })
+          .then((r) => { if (!r.ok) throw new Error(); }),
+      ]);
+      const ok = results.some((r) => r.status === 'fulfilled');
+      status.textContent = ok ? form.dataset.ok! : form.dataset.ko!;
+      status.dataset.state = ok ? 'ok' : 'ko';
+      if (ok) form.reset();
+      btn.disabled = false; btn.innerHTML = label;
+    });
+  });
+</script>
+<style>
+  .contact-form { display: grid; gap: 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 4vw, 36px); box-shadow: var(--shadow); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  label { display: grid; gap: 6px; font: 500 0.78rem/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  input, textarea { font: 400 1rem/1.5 var(--sans); color: var(--ink); background: var(--paper); border: 1px solid var(--line-strong); border-radius: 10px; padding: 12px 14px; text-transform: none; letter-spacing: 0; }
+  input:focus, textarea:focus { outline: none; border-color: var(--rust); box-shadow: 0 0 0 3px var(--rust-soft); }
+  textarea { resize: vertical; min-height: 140px; }
+  button { justify-self: start; }
+  .status { margin: 0; min-height: 1.5em; font-size: var(--step--1); }
+  .status[data-state='ok'] { color: #2f7d4f; }
+  .status[data-state='ko'] { color: #b3261e; }
+  @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
+</style>

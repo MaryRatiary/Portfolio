@@ -1,0 +1,18 @@
+---
+import { t, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<span class="mono views" data-views data-label={t(lang, 'views')} hidden></span>
+<script>
+  const el = document.querySelector<HTMLElement>('[data-views]');
+  if (el && !sessionStorage.getItem('viewed')) {
+    fetch('/.netlify/functions/views', { method: 'POST' })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d) => { if (typeof d.views === 'number') { el.textContent = `${d.views.toLocaleString()} ${el.dataset.label}`; el.hidden = false; try { sessionStorage.setItem('viewed', String(d.views)); } catch {} } })
+      .catch(() => {});
+  } else if (el) {
+    const v = Number(sessionStorage.getItem('viewed'));
+    if (v) { el.textContent = `${v.toLocaleString()} ${el.dataset.label}`; el.hidden = false; }
+  }
+</script>

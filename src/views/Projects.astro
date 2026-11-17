@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { t, localePath, altLang, type Lang } from '../i18n/ui';
+import { projets } from '../lib/content';
+import { breadcrumbLd } from '../lib/ld';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const all = await projets(lang);
+const featured = all.filter((p) => p.data.featured).sort((a, b) => a.data.featured! - b.data.featured!);
+const web = all.filter((p) => p.data.kind === 'web' && !p.data.featured);
+const ia = all.filter((p) => p.data.kind === 'ia');
+const archive = all.filter((p) => p.data.kind === 'archive');
+const path = localePath(lang, '/projets/');
+const crumbs = [{ name: t(lang, 'home'), url: localePath(lang, '/') }, { name: t(lang, 'nav.projects'), url: path }];
+const groups = [
+  { id: 'web', title: fr ? 'Sites et applications web' : 'Websites and web apps', items: web },
+  { id: 'ia', title: fr ? 'Intégration IA et automatisation' : 'AI integration and automation', items: ia },
+  { id: 'archives', title: fr ? 'Projets antérieurs' : 'Earlier projects', items: archive },
+];
+---
+<Base lang={lang} {path} altPath={localePath(altLang(lang), '/projets/')}
+  title={fr ? 'Réalisations — sites, SaaS et applications web | Mario R.' : 'Work — websites, SaaS and web apps | Mario Ratiarivony'}
+  description={fr ? 'Portfolio de Mario Ratiarivony, développeur web freelance : CRM SaaS, plateformes métier, sites vitrines, e-commerce et intégrations IA, avec captures.' : 'Portfolio of Mario Ratiarivony, freelance web developer: SaaS CRM, business platforms, showcase sites, e-commerce and AI integrations, with screenshots.'}
+  jsonld={[breadcrumbLd(crumbs)]}>
+  <header class="container head">
+    <Breadcrumbs items={crumbs} />
+    <p class="eyebrow">Portfolio</p>
+    <h1>{fr ? <>Mes <em>réalisations</em></> : <>Selected <em>work</em></>}</h1>
+    <p class="lede">{fr ? 'Des produits web conçus, développés et mis en ligne de bout en bout : SaaS, plateformes métier, sites vitrines et e-commerce, plus quelques intégrations IA.' : 'Web products designed, built and shipped end to end: SaaS, business platforms, showcase sites and e-commerce, plus a few AI integrations.'}</p>
+  </header>
+  <section class="container block">
+    <h2 class="visually-hidden">{fr ? 'À la une' : 'Featured'}</h2>
+    <div class="featured">{featured.map((p, i) => <ProjectCard p={p} lang={lang} size="xl" eager={i === 0} />)}</div>
+  </section>
+  {groups.filter((g) => g.items.length).map((g) => (
+    <section class="container block" id={g.id}>
+      <h2>{g.title}</h2>
+      <div class="grid">{g.items.map((p) => <ProjectCard p={p} lang={lang} size="sm" />)}</div>
+    </section>
+  ))}
+</Base>
+<style>
+  .head { padding-top: clamp(28px, 5vw, 56px); display: grid; gap: 16px; }
+  .block { padding-block: clamp(48px, 7vw, 88px); border-top: 1px solid var(--line); margin-top: 48px; }
+  .block h2 { font-size: var(--step-3); margin-bottom: 32px; }
+  .featured { display: grid; gap: clamp(48px, 8vw, 96px); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 3vw, 40px); }
+  @media (max-width: 1000px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
+</style>

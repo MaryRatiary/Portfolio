@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { t, localePath, altLang, type Lang } from '../i18n/ui';
+import { posts, slugOf } from '../lib/content';
+import { breadcrumbLd } from '../lib/ld';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const list = await posts(lang);
+const path = localePath(lang, '/blog/');
+const crumbs = [{ name: t(lang, 'home'), url: localePath(lang, '/') }, { name: 'Blog', url: path }];
+---
+<Base lang={lang} {path} altPath={localePath(altLang(lang), '/blog/')}
+  title={fr ? 'Blog — conseils pour créer votre site ou votre SaaS | Mario R.' : 'Blog — advice for building your website or SaaS | Mario R.'}
+  description={fr ? 'Articles de Mario Ratiarivony, développeur web freelance : prix d’un site sur mesure, choix techniques, SEO et travail à distance avec un développeur.' : 'Articles by Mario Ratiarivony, freelance web developer: custom website pricing, technical choices, SEO and working remotely with a developer.'}
+  jsonld={[breadcrumbLd(crumbs)]}>
+  <header class="container head">
+    <Breadcrumbs items={crumbs} />
+    <p class="eyebrow">Blog</p>
+    <h1>{fr ? <>Notes & <em>conseils</em></> : <>Notes & <em>advice</em></>}</h1>
+  </header>
+  <div class="container">
+    <ul class="list">
+      {list.map((p) => (
+        <li>
+          <a href={localePath(lang, `/blog/${slugOf(p)}/`)}>
+            <time class="mono" datetime={p.data.date.toISOString()}>{p.data.date.toLocaleDateString(fr ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time>
+            <span><span class="pt">{p.data.title}</span><span class="pd">{p.data.description}</span></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>
+<style>
+  .head { padding-top: clamp(28px, 5vw, 56px); display: grid; gap: 16px; margin-bottom: 40px; }
+  .list { list-style: none; padding: 0; margin: 0 0 clamp(64px, 9vw, 120px); border-top: 1px solid var(--line); }
+  .list a { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .pt { display: block; font: 400 var(--step-3)/1.1 var(--serif); margin-bottom: 8px; }
+  .pd { color: var(--ink-2); }
+  time { color: var(--muted); padding-top: 10px; }
+  .list a:hover .pt { color: var(--rust); }
+  @media (max-width: 700px) { .list a { grid-template-columns: 1fr; gap: 8px; } }
+</style>

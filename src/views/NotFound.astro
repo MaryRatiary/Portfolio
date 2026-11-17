@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base lang="fr" path="/404/" title="Page introuvable (404) — Mario Ratiarivony" description="Cette page n’existe pas ou a été déplacée. Retrouvez les réalisations, les services et le formulaire de contact de Mario Ratiarivony, développeur web." noindex>
+  <section class="container nf">
+    <p class="eyebrow">Erreur 404 · Page not found</p>
+    <h1>Cette page <em>s’est égarée</em>.</h1>
+    <p class="lede">Le lien est peut-être ancien : le site a été entièrement refait. Voici où aller :</p>
+    <ul>
+      <li><a class="btn btn-primary" href="/">Accueil</a></li>
+      <li><a class="btn btn-ghost" href="/projets/">Réalisations</a></li>
+      <li><a class="btn btn-ghost" href="/contact/">Contact</a></li>
+      <li><a class="btn btn-ghost" href="/en/" lang="en">English</a></li>
+    </ul>
+  </section>
+</Base>
+<style>
+  .nf { padding-block: clamp(64px, 12vw, 160px); display: grid; gap: 20px; }
+  ul { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; padding: 0; margin: 12px 0 0; }
+</style>

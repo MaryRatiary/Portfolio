@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import { localePath, type Lang } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+---
+<Base lang={lang} path={fr ? '/contact/merci/' : '/en/contact/thanks/'} altPath={fr ? '/en/contact/thanks/' : '/contact/merci/'} noindex
+  title={fr ? 'Message envoyé — merci ! | Mario Ratiarivony' : 'Message sent — thank you! | Mario Ratiarivony'}
+  description={fr ? 'Votre message a bien été envoyé à Mario Ratiarivony. Réponse sous 24 h ouvrées.' : 'Your message has been sent to Mario Ratiarivony. Reply within one business day.'}>
+  <section class="container ty">
+    <p class="eyebrow">Contact</p>
+    <h1>{fr ? <>Merci, <em>message bien reçu</em>.</> : <>Thanks, <em>message received</em>.</>}</h1>
+    <p class="lede">{fr ? 'Je vous réponds sous 24 h ouvrées. En cas d’urgence, écrivez directement à maryratiary@gmail.com.' : 'I will reply within one business day. If it is urgent, email maryratiary@gmail.com directly.'}</p>
+    <p class="cta"><a class="btn btn-primary" href={localePath(lang, '/projets/')}>{fr ? 'Voir mes réalisations' : 'See my work'}</a> <a class="btn btn-ghost" href={localePath(lang, '/')}>{fr ? 'Retour à l’accueil' : 'Back to home'}</a></p>
+  </section>
+</Base>
+<style>
+  .ty { padding-block: clamp(64px, 12vw, 160px); display: grid; gap: 20px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+</style>

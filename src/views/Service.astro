@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Faq from '../components/Faq.astro';
+import { t, localePath, altLang, type Lang } from '../i18n/ui';
+import { projets, slugOf, type Service } from '../lib/content';
+import { breadcrumbLd, PERSON_ID, SITE } from '../lib/ld';
+interface Props { lang: Lang; entry: Service }
+const { lang, entry } = Astro.props;
+const fr = lang === 'fr';
+const d = entry.data;
+const slug = slugOf(entry);
+const path = localePath(lang, `/services/${slug}/`);
+const all = await projets(lang);
+const related = d.related.map((s) => all.find((p) => slugOf(p) === s)).filter(Boolean) as typeof all;
+const crumbs = [{ name: t(lang, 'home'), url: localePath(lang, '/') }, { name: 'Services', url: localePath(lang, '/services/') }, { name: d.title, url: path }];
+const serviceLd = {
+  '@context': 'https://schema.org', '@type': 'Service', name: d.title, description: d.seoDescription, serviceType: d.title,
+  provider: { '@id': PERSON_ID }, url: new URL(path, SITE).href,
+  areaServed: [{ '@type': 'Country', name: 'France' }, { '@type': 'Country', name: 'Madagascar' }],
+};
+---
+<Base lang={lang} {path} altPath={localePath(altLang(lang), `/services/${slug}/`)} title={d.seoTitle} description={d.seoDescription} jsonld={[serviceLd, breadcrumbLd(crumbs)]}>
+  <header class="container head">
+    <Breadcrumbs items={crumbs} />
+    <p class="eyebrow">Service 0{d.order}</p>
+    <h1>{d.title}</h1>
+    <p class="lede">{d.summary}</p>
+    <p><a class="btn btn-primary" href={localePath(lang, '/contact/')}>{t(lang, 'cta.project')} <span class="arrow" aria-hidden="true">→</span></a></p>
+  </header>
+  <div class="container cols">
+    <aside>
+      <h2>{fr ? 'Ce que je livre' : 'What you get'}</h2>
+      <ul class="deliv">{d.deliverables.map((x) => <li>{x}</li>)}</ul>
+      <h2>{fr ? 'Technologies' : 'Technologies'}</h2>
+      <ul class="tags">{d.stack.map((x) => <li>{x}</li>)}</ul>
+    </aside>
+    <div class="prose" set:html={entry.rendered?.html} />
+  </div>
+  {related.length > 0 && (
+    <section class="container block">
+      <h2>{fr ? 'Projets liés' : 'Related projects'}</h2>
+      <div class="grid">{related.map((p) => <ProjectCard p={p} lang={lang} size="sm" />)}</div>
+    </section>
+  )}
+  <div class="narrow block"><Faq items={d.faq} title={fr ? 'Questions fréquentes' : 'FAQ'} /></div>
+</Base>
+<style>
+  .head { padding-top: clamp(28px, 5vw, 56px); display: grid; gap: 16px; }
+  .head h1 { font-size: var(--step-5); max-width: 18ch; }
+  .cols { display: grid; grid-template-columns: 1fr 1.6fr; gap: clamp(32px, 6vw, 96px); padding-block: clamp(48px, 7vw, 96px); }
+  aside h2 { font-size: var(--step-2); margin: 0 0 16px; }
+  aside h2:not(:first-child) { margin-top: 36px; }
+  .deliv { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .deliv li { padding-left: 26px; position: relative; color: var(--ink-2); }
+  .deliv li::before { content: '→'; position: absolute; left: 0; color: var(--rust); }
+  .prose :global(h2:first-child) { margin-top: 0; }
+  .block { padding-block: clamp(48px, 7vw, 88px); border-top: 1px solid var(--line); }
+  .block > h2 { font-size: var(--step-3); margin-bottom: 32px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  @media (max-width: 900px) { .cols, .grid { grid-template-columns: 1fr; } }
+</style>

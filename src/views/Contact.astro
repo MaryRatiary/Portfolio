@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { t, localePath, altLang, type Lang } from '../i18n/ui';
+import { breadcrumbLd } from '../lib/ld';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+const path = localePath(lang, '/contact/');
+const crumbs = [{ name: t(lang, 'home'), url: localePath(lang, '/') }, { name: 'Contact', url: path }];
+const contactLd = { '@context': 'https://schema.org', '@type': 'ContactPage', name: 'Contact', url: `https://marioportfoliio.netlify.app${path}` };
+const channels = [
+  { k: 'Email', v: 'maryratiary@gmail.com', href: 'mailto:maryratiary@gmail.com' },
+  { k: 'LinkedIn', v: 'Mario Ratiarivony', href: 'https://www.linkedin.com/in/mario-mamitantely-ratiarivony/' },
+  { k: 'GitHub', v: 'MaryRatiary', href: 'https://github.com/MaryRatiary' },
+];
+---
+<Base lang={lang} {path} altPath={localePath(altLang(lang), '/contact/')}
+  title={fr ? 'Contact — devis pour votre site ou SaaS | Mario Ratiarivony' : 'Contact — get a quote for your website or SaaS | Mario R.'}
+  description={fr ? 'Contactez Mario Ratiarivony, développeur web freelance, pour un site sur mesure, une application web ou un SaaS. Réponse sous 24 h ouvrées avec une estimation.' : 'Contact Mario Ratiarivony, freelance web developer, about a custom website, web app or SaaS. Reply within one business day with a first estimate.'}
+  jsonld={[contactLd, breadcrumbLd(crumbs)]}>
+  <div class="container wrap">
+    <header>
+      <Breadcrumbs items={crumbs} />
+      <p class="eyebrow">Contact</p>
+      <h1>{fr ? <>Un projet&nbsp;? <em>Écrivez-moi.</em></> : <>A project? <em>Drop me a line.</em></>}</h1>
+      <p class="lede">{fr ? 'Quelques lignes suffisent : votre activité, ce que vous voulez construire et votre échéance. Je réponds sous 24 h ouvrées, en français ou en anglais.' : 'A few lines are enough: your business, what you want to build and your deadline. I reply within one business day, in English or French.'}</p>
+      <dl class="channels">
+        {channels.map((c) => <div><dt class="mono">{c.k}</dt><dd><a href={c.href} rel="me noopener" target={c.href.startsWith('http') ? '_blank' : undefined}>{c.v}</a></dd></div>)}
+        <div><dt class="mono">{fr ? 'Fuseau' : 'Time zone'}</dt><dd>{fr ? 'Antananarivo (UTC+3) — 1 h d’avance sur Paris en hiver, 2 h en été' : 'Antananarivo (UTC+3)'}</dd></div>
+      </dl>
+    </header>
+    <ContactForm lang={lang} />
+  </div>
+</Base>
+<style>
+  .wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 88px); padding-block: clamp(28px, 5vw, 56px) clamp(64px, 9vw, 120px); align-items: start; }
+  header { display: grid; gap: 16px; }
+  .channels { display: grid; gap: 14px; margin: 16px 0 0; }
+  .channels div { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding-top: 14px; border-top: 1px solid var(--line); }
+  dt { color: var(--muted); } dd { margin: 0; }
+  @media (max-width: 860px) { .wrap { grid-template-columns: 1fr; } }
+</style>

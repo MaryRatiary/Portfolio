@@ -1,0 +1,25 @@
+---
+import { localePath, type Lang } from '../i18n/ui';
+import { slugOf, type Service } from '../lib/content';
+interface Props { s: Service; lang: Lang; index: number }
+const { s, lang, index } = Astro.props;
+const href = localePath(lang, `/services/${slugOf(s)}/`);
+---
+<article class="svc reveal">
+  <span class="num mono">0{index + 1}</span>
+  <h3><a href={href}>{s.data.title}</a></h3>
+  <p>{s.data.short}</p>
+  <ul class="tags">{s.data.stack.slice(0, 5).map((x) => <li>{x}</li>)}</ul>
+  <span class="more mono" aria-hidden="true">{lang === 'fr' ? 'En savoir plus' : 'Learn more'} →</span>
+</article>
+<style>
+  .svc { position: relative; display: grid; gap: 14px; align-content: start; padding: clamp(22px, 3vw, 32px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); transition: border-color .2s, transform .2s; }
+  .svc:hover { border-color: var(--rust); transform: translateY(-3px); }
+  .num { color: var(--rust); }
+  h3 { font-size: var(--step-2); }
+  h3 a { text-decoration: none; }
+  h3 a::after { content: ''; position: absolute; inset: 0; }
+  p { color: var(--ink-2); margin: 0; }
+  .more { color: var(--muted); margin-top: 6px; }
+  .svc:hover .more { color: var(--rust); }
+</style>
