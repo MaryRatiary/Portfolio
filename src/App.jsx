@@ -32,6 +32,11 @@ const I18N = {
       ctaContact: 'Me contacter',
     },
     views: 'visites',
+    video: {
+      eyebrow: 'En 50 secondes',
+      title: (<>Qui je suis, <em>en vidéo</em>.</>),
+      play: 'Lire la vidéo',
+    },
     work: {
       eyebrow: 'Projets sélectionnés',
       title: (<>Ce que j&apos;ai <em>livré</em>.</>),
@@ -163,6 +168,11 @@ const I18N = {
       ctaContact: 'Get in touch',
     },
     views: 'views',
+    video: {
+      eyebrow: 'In 50 seconds',
+      title: (<>Who I am, <em>on video</em>.</>),
+      play: 'Play the video',
+    },
     work: {
       eyebrow: 'Selected work',
       title: (<>Things I&apos;ve <em>shipped</em>.</>),
@@ -449,6 +459,7 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openProject, setOpenProject] = useState(null);
+  const [videoOn, setVideoOn] = useState(false);
   const [formState, setFormState] = useState('idle');
 
   const onContactSubmit = async (e) => {
@@ -758,6 +769,38 @@ export default function App() {
             <span>Automation</span><span>UI / UX</span><span>Madagascar</span>
           </div>
         </div>
+
+        {/* ===================== VIDEO ===================== */}
+        <section id="video" className="section">
+          <div className="section-head">
+            <p className="eyebrow">{t.video.eyebrow}</p>
+            <h2 className="section-title">{t.video.title}</h2>
+          </div>
+          <Motion.div
+            className="yt"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.6 }}
+          >
+            {videoOn ? (
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/UBUzwtlQ65Q?autoplay=1&rel=0"
+                title="Mario, développeur full-stack"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            ) : (
+              <button type="button" className="yt-btn" onClick={() => setVideoOn(true)} aria-label={t.video.play}>
+                <img src="/video-presentation.jpg" alt="Mario, développeur full-stack" loading="lazy" width="1280" height="720" />
+                <span className="yt-play" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+                </span>
+              </button>
+            )}
+          </Motion.div>
+        </section>
 
         {/* ===================== WORK ===================== */}
         <section id="work" className="section">
