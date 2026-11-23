@@ -356,7 +356,7 @@ const projects = [
 
 const contactsBase = [
   { code: 'email',    icon: '01', value: 'maryratiary@gmail.com', href: 'mailto:maryratiary@gmail.com' },
-  { code: 'phone',    icon: '02', value: '+261 ** ** 0917',       href: 'tel:+2610917' },
+  { code: 'phone',    icon: '02', value: '+261 32 31 084 80',     href: 'tel:+261323108480' },
   { code: 'linkedin', icon: '03', value: 'Ratiarivony Mario',     href: 'https://www.linkedin.com/in/mario-mamitantely-ratiarivony/' },
   { code: 'github',   icon: '04', value: 'MaryRatiary',           href: 'https://github.com/MaryRatiary' },
   { code: 'facebook', icon: '05', value: 'Mario Ratiary',         href: 'https://facebook.com/mario.ratiary' },
