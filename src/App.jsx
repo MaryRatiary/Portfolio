@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion as Motion, useScroll, useSpring } from 'framer-motion';
 import {
   SiReact, SiNextdotjs, SiAngular, SiNestjs, SiDjango, SiDotnet, SiSymfony,
-  SiN8N, SiMake, SiHubspot, SiThreedotjs, SiTailwindcss, SiBlender, SiOpenjdk, SiStripe,
+  SiN8N, SiMake, SiHubspot, SiBrevo, SiThreedotjs, SiTailwindcss, SiBlender, SiOpenjdk, SiStripe,
 } from 'react-icons/si';
+import { TbBrandReactNative, TbBrandAdobeAfterEffect } from 'react-icons/tb';
 import LogoLoop from './LogoLoop';
 import LightRays from './LightRays';
 import FoldText from './FoldText';
@@ -300,23 +301,23 @@ const navItems = [
 ];
 
 const skills = [
-  { name: 'React', level: 95, group: 'Frontend' },
-  { name: 'Next.js', level: 85, group: 'Frontend' },
-  { name: 'Angular', level: 75, group: 'Frontend' },
-  { name: 'React Native', level: 90, group: 'Frontend' },
-  { name: 'Nest', level: 86, group: 'Backend' },
-  { name: 'Django', level: 80, group: 'Backend' },
-  { name: 'C# / ASP.Net', level: 85, group: 'Backend' },
-  { name: 'Java', level: 70, group: 'Backend' },
-  { name: 'Symfony', level: 75, group: 'Backend' },
-  { name: 'N8N', level: 88, group: 'Automation' },
-  { name: 'Make', level: 80, group: 'Automation' },
-  { name: 'HubSpot', level: 85, group: 'Automation' },
-  { name: 'Lemlist', level: 80, group: 'Automation' },
-  { name: 'Brevo', level: 78, group: 'Automation' },
-  { name: 'Blender', level: 82, group: 'Craft' },
-  { name: 'After Effects', level: 88, group: 'Craft' },
-  { name: 'CapCut', level: 90, group: 'Craft' },
+  { name: 'React', level: 95, group: 'Frontend', Icon: SiReact },
+  { name: 'Next.js', level: 85, group: 'Frontend', Icon: SiNextdotjs },
+  { name: 'Angular', level: 75, group: 'Frontend', Icon: SiAngular },
+  { name: 'React Native', level: 90, group: 'Frontend', Icon: TbBrandReactNative },
+  { name: 'Nest', level: 86, group: 'Backend', Icon: SiNestjs },
+  { name: 'Django', level: 80, group: 'Backend', Icon: SiDjango },
+  { name: 'C# / ASP.Net', level: 85, group: 'Backend', Icon: SiDotnet },
+  { name: 'Java', level: 70, group: 'Backend', Icon: SiOpenjdk },
+  { name: 'Symfony', level: 75, group: 'Backend', Icon: SiSymfony },
+  { name: 'N8N', level: 88, group: 'Automation', Icon: SiN8N },
+  { name: 'Make', level: 80, group: 'Automation', Icon: SiMake },
+  { name: 'HubSpot', level: 85, group: 'Automation', Icon: SiHubspot },
+  { name: 'Lemlist', level: 80, group: 'Automation', mono: 'lm' },
+  { name: 'Brevo', level: 78, group: 'Automation', Icon: SiBrevo },
+  { name: 'Blender', level: 82, group: 'Craft', Icon: SiBlender },
+  { name: 'After Effects', level: 88, group: 'Craft', Icon: TbBrandAdobeAfterEffect },
+  { name: 'CapCut', level: 90, group: 'Craft', mono: 'Cc' },
 ];
 
 const groupOrder = ['Frontend', 'Backend', 'Automation', 'Craft'];
@@ -939,26 +940,35 @@ export default function App() {
                 transition={{ duration: 0.5 }}
               >
                 <header>
-                  <h3>{group}</h3>
-                  <span>{t.groupLabels[group]}</span>
+                  <span className="stack-num">{t.groupLabels[group].slice(0, 2)}</span>
+                  <div>
+                    <h3>{group}</h3>
+                    <span>{t.groupLabels[group].slice(5)}</span>
+                  </div>
+                  <span className="stack-count">{items.length}</span>
                 </header>
-                <div className="stack-list">
-                  {items.map((s, j) => (
-                    <div className="stack-item" key={s.name}>
-                      <b>{s.name}</b>
-                      <i className="stack-bar">
-                        <Motion.span
-                          className="stack-bar-fill"
-                          initial={{ scaleX: 0 }}
-                          whileInView={{ scaleX: s.level / 100 }}
-                          viewport={{ once: true, amount: 0.4 }}
-                          transition={{ duration: 1.2, delay: j * 0.05, ease: [0.2, 0.8, 0.2, 1] }}
-                        />
-                      </i>
-                      <em>{t.skillLevels[skillLevelKey(s.level)]}</em>
-                    </div>
-                  ))}
-                </div>
+                <ul className="skill-tiles">
+                  {items.map((s) => {
+                    const lvl = skillLevelKey(s.level);
+                    const n = lvl === 'expert' ? 3 : lvl === 'advanced' ? 2 : 1;
+                    return (
+                      <li className="skill-tile" key={s.name}>
+                        <span className="skill-logo" aria-hidden="true">
+                          {s.Icon ? <s.Icon /> : <span className="skill-mono">{s.mono}</span>}
+                        </span>
+                        <span className="skill-meta">
+                          <b>{s.name}</b>
+                          <span className="skill-level">
+                            <span className="skill-pips" aria-hidden="true">
+                              {[1, 2, 3].map((k) => <i key={k} className={k <= n ? 'on' : ''} />)}
+                            </span>
+                            {t.skillLevels[lvl]}
+                          </span>
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
               </Motion.article>
             ))}
           </div>
