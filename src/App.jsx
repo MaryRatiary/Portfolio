@@ -340,17 +340,17 @@ const techLogos = [
 ];
 
 const projects = [
-  { key: 'tracify',  url: 'https://tracify-eta.vercel.app',   tech: 'Nuxt · Convex · Meta Ads',      year: '2026', category: 'Ads Analytics',      image: '/tracify.png' },
-  { key: 'luxy',     url: 'https://luxyshop.netlify.app',     tech: 'React · Tailwind · E-Commerce', year: '2026', category: 'Luxury E-Commerce',  image: '/luxury.png' },
-  { key: 'kpop',     url: 'https://kpopshop.netlify.app',     tech: 'React · Tailwind · Stripe',     year: '2026', category: 'Niche E-Commerce',   image: '/kpopshop.netlify.png' },
-  { key: 'scaleas',  url: 'https://scaleas-e.netlify.app',    tech: 'React · Node · Scalable',       year: '2026', category: 'E-Commerce Platform', image: '/scale.png' },
-  { key: 'nexus',    url: 'https://nexuslaab.netlify.app',    tech: 'React · Three.js · Tailwind',   year: '2025', category: '3D Integration',     image: '/nexuslaab.png' },
-  { key: 'allstone', url: 'https://allstonemada.netlify.app', tech: 'React · C# · ASP.Net',          year: '2024', category: 'E-Commerce',          image: '/allstone-mada.png' },
-  { key: 'aveny',    url: 'https://avenywork.netlify.app',    tech: 'React · Django · ML',           year: '2024', category: 'AI Platform',         image: '/avenywork.png' },
-  { key: 'ratiary',  url: 'https://ratiarybusiness.netlify.app', tech: 'React · Tailwind · SEO',    year: '2024', category: 'Business',           image: '/ratiarybusiness.png' },
-  { key: 'rise',     url: 'https://riseplatform.netlify.app', tech: 'React · C# · Realtime',         year: '2024', category: 'Social Network',     image: '/riseplatform.png' },
-  { key: 'madagiascar', url: null, tech: 'React · NestJS · IA', year: '2026', category: 'AI Platform', image: '/madagiascar.png' },
-  { key: 'ecoi', url: 'https://velora.electroconceptoi.com', tech: 'React · NestJS · GHL', year: '2026', category: 'CRM SaaS', image: '/ecoi.png' },
+  { key: 'tracify',  url: 'https://tracify-eta.vercel.app',   tech: 'Nuxt · Convex · Meta Ads',      year: '2026', category: 'Ads Analytics',      image: '/tracify.webp' },
+  { key: 'luxy',     url: 'https://luxyshop.netlify.app',     tech: 'React · Tailwind · E-Commerce', year: '2026', category: 'Luxury E-Commerce',  image: '/luxury.webp' },
+  { key: 'kpop',     url: 'https://kpopshop.netlify.app',     tech: 'React · Tailwind · Stripe',     year: '2026', category: 'Niche E-Commerce',   image: '/kpopshop.netlify.webp' },
+  { key: 'scaleas',  url: 'https://scaleas-e.netlify.app',    tech: 'React · Node · Scalable',       year: '2026', category: 'E-Commerce Platform', image: '/scale.webp' },
+  { key: 'nexus',    url: 'https://nexuslaab.netlify.app',    tech: 'React · Three.js · Tailwind',   year: '2025', category: '3D Integration',     image: '/nexuslaab.webp' },
+  { key: 'allstone', url: 'https://allstonemada.netlify.app', tech: 'React · C# · ASP.Net',          year: '2024', category: 'E-Commerce',          image: '/allstone-mada.webp' },
+  { key: 'aveny',    url: 'https://avenywork.netlify.app',    tech: 'React · Django · ML',           year: '2024', category: 'AI Platform',         image: '/avenywork.webp' },
+  { key: 'ratiary',  url: 'https://ratiarybusiness.netlify.app', tech: 'React · Tailwind · SEO',    year: '2024', category: 'Business',           image: '/ratiarybusiness.webp' },
+  { key: 'rise',     url: 'https://riseplatform.netlify.app', tech: 'React · C# · Realtime',         year: '2024', category: 'Social Network',     image: '/riseplatform.webp' },
+  { key: 'madagiascar', url: null, tech: 'React · NestJS · IA', year: '2026', category: 'AI Platform', image: '/madagiascar.webp' },
+  { key: 'ecoi', url: 'https://velora.electroconceptoi.com', tech: 'React · NestJS · GHL', year: '2026', category: 'CRM SaaS', image: '/ecoi.webp' },
 ];
 
 const contactsBase = [
@@ -714,8 +714,8 @@ export default function App() {
               transition={{ delay: 0.45, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
             >
               <div className="portrait portrait-cutout">
-                <img className="portrait-back" src="/moi-detoure.png" alt="" aria-hidden="true" />
-                <img className="portrait-front" src="/moi-front.png" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" fetchPriority="high" />
+                <img className="portrait-back" src="/moi-detoure.webp" width="800" height="1293" alt="" aria-hidden="true" />
+                <img className="portrait-front" src="/moi-front.webp" width="800" height="1066" alt="Ratiarivony Mario Mamitantely — développeur full stack à Madagascar" fetchPriority="high" />
               </div>
             </Motion.div>
 
@@ -980,6 +980,7 @@ export default function App() {
         <section id="contact" className="section">
           <div className="contact-grid">
             <div className="contact-intro">
+              <img className="contact-avatar" src="/mario-ratiarivony.jpg" alt="Mario Ratiarivony (Ratiarivony Mario Mamitantely), développeur web" width="1200" height="1200" loading="lazy" />
               <p className="eyebrow">{t.contact.eyebrow}</p>
               <h2>{t.contact.title}</h2>
               <p>{t.contact.body}</p>

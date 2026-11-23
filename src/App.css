@@ -1244,3 +1244,10 @@ img { max-width: 100%; display: block; }
 .yt-play svg { margin-left: 4px; }
 .yt-btn:hover .yt-play, .yt-btn:focus-visible .yt-play { transform: scale(1.08); }
 @media (prefers-reduced-motion: reduce) { .yt-btn img, .yt-play { transition: none; } }
+
+/* ---------- Photo (section contact) ---------- */
+.contact-avatar {
+  width: 88px; height: 88px; border-radius: 50%; object-fit: cover;
+  margin-bottom: 20px; border: 2px solid var(--rust);
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.35);
+}
