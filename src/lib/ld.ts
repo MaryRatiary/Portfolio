@@ -11,7 +11,7 @@ export const personLd = () => ({
   address: { '@type': 'PostalAddress', addressLocality: 'Antananarivo', addressCountry: 'MG' },
   knowsAbout: ['Développement web', 'React', 'Next.js', 'Astro', 'Vue.js', 'Nuxt', 'NestJS', 'Django', 'Convex', 'TypeScript', 'SEO technique', 'Automatisation n8n', 'Intégration IA'],
   knowsLanguage: ['fr', 'en', 'mg'],
-  sameAs: ['https://www.linkedin.com/in/mario-mamitantely-ratiarivony/', 'https://github.com/MaryRatiary', 'https://facebook.com/mario.ratiary'],
+  sameAs: ['https://www.linkedin.com/in/mario-mamitantely-ratiarivony/', 'https://github.com/MaryRatiary', 'https://facebook.com/mario.ratiary', 'https://www.youtube.com/@MarioRatiarivony'],
 });
 
 export const websiteLd = () => ({
@@ -34,4 +34,17 @@ export const businessLd = (lang: 'fr' | 'en') => ({
 export const breadcrumbLd = (items: { name: string; url: string }[]) => ({
   '@context': 'https://schema.org', '@type': 'BreadcrumbList',
   itemListElement: items.map((it, i) => ({ '@type': 'ListItem', position: i + 1, name: it.name, item: new URL(it.url, SITE).href })),
+});
+
+export const videoLd = (lang: 'fr' | 'en') => ({
+  '@context': 'https://schema.org', '@type': 'VideoObject',
+  name: 'Mario, développeur full-stack',
+  description: lang === 'fr'
+    ? 'Présentation en vidéo de Mario Ratiarivony, développeur web freelance : parcours, méthode et projets.'
+    : 'Video introduction of Mario Ratiarivony, freelance web developer: background, method and projects.',
+  thumbnailUrl: 'https://i.ytimg.com/vi/UBUzwtlQ65Q/maxresdefault.jpg',
+  uploadDate: '2026-11-10T08:49:32-08:00', duration: 'PT51S',
+  contentUrl: 'https://www.youtube.com/watch?v=UBUzwtlQ65Q',
+  embedUrl: 'https://www.youtube-nocookie.com/embed/UBUzwtlQ65Q',
+  author: { '@id': PERSON_ID },
 });

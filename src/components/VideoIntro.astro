@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import type { Lang } from '../i18n/ui';
+import poster from '../assets/video-presentation.jpg';
+
+interface Props { lang: Lang; id: string; title: string }
+const { lang, id, title } = Astro.props;
+const fr = lang === 'fr';
+---
+<div class="vid" data-yt={id} data-title={title}>
+  <button type="button" class="vid-btn" aria-label={fr ? `Lire la vidéo : ${title}` : `Play video: ${title}`}>
+    <Image src={poster} alt={fr ? `Vignette de la vidéo « ${title} »` : `Thumbnail of the video "${title}"`} widths={[640, 960, 1280]} sizes="(min-width: 1000px) 960px, 100vw" loading="lazy" />
+    <span class="vid-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+    </span>
+  </button>
+  <noscript><a href={`https://www.youtube.com/watch?v=${id}`}>{fr ? 'Voir la vidéo sur YouTube' : 'Watch on YouTube'}</a></noscript>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.vid[data-yt]').forEach((box) => {
+    box.querySelector('button')?.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.yt}?autoplay=1&rel=0`;
+      f.title = box.dataset.title ?? 'YouTube';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      box.replaceChildren(f);
+    }, { once: true });
+  });
+</script>
+
+<style>
+  .vid {
+    position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden;
+    background: var(--paper-2); border: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .vid :global(iframe), .vid-btn { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .vid-btn { padding: 0; cursor: pointer; background: none; display: block; }
+  .vid-btn :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+  .vid-btn:hover :global(img) { transform: scale(1.02); }
+  .vid-play {
+    position: absolute; inset: 0; margin: auto; width: 76px; height: 76px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--rust); color: #fff;
+    box-shadow: 0 10px 30px -8px #0008; transition: transform .2s ease;
+  }
+  .vid-play svg { margin-left: 4px; }
+  .vid-btn:hover .vid-play, .vid-btn:focus-visible .vid-play { transform: scale(1.08); }
+  @media (prefers-reduced-motion: reduce) { .vid-btn :global(img), .vid-play { transition: none; } }
+</style>

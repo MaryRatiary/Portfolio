@@ -4,9 +4,10 @@ import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import ContactForm from '../components/ContactForm.astro';
+import VideoIntro from '../components/VideoIntro.astro';
 import { t, localePath, type Lang } from '../i18n/ui';
 import { projets, services, posts, slugOf } from '../lib/content';
-import { businessLd } from '../lib/ld';
+import { businessLd, videoLd } from '../lib/ld';
 import portrait from '../assets/moi/moi2.png';
 
 interface Props { lang: Lang }
@@ -42,7 +43,7 @@ const description = fr
   ? 'Développeur web freelance à Madagascar : sites sur mesure, applications web et SaaS pour des clients en France et à Madagascar. Devis rapide et clair.'
   : 'Freelance web developer based in Madagascar: custom websites, web apps and SaaS for clients in France and worldwide. Fast, clear quotes.';
 ---
-<Base lang={lang} path={L('/')} altPath={localePath(fr ? 'en' : 'fr', '/')} {title} {description} jsonld={[businessLd(lang)]}>
+<Base lang={lang} path={L('/')} altPath={localePath(fr ? 'en' : 'fr', '/')} {title} {description} jsonld={[businessLd(lang), videoLd(lang)]}>
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-text">
@@ -73,6 +74,21 @@ const description = fr
     </div>
     <div class="marquee" aria-label={fr ? 'Technologies maîtrisées' : 'Technologies'}>
       <ul class="track mono">{[...stack, ...stack].map((s, i) => <li aria-hidden={i >= stack.length ? 'true' : undefined}>{s}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="section" id="video">
+    <div class="container">
+      <header class="section-head">
+        <p class="eyebrow">{fr ? 'En 50 secondes' : 'In 50 seconds'}</p>
+        <h2>{fr ? <>Qui je suis, <em>en vidéo</em>.</> : <>Who I am, <em>on video</em>.</>}</h2>
+        <p class="lede">
+          {fr
+            ? 'Mon parcours, ma façon de travailler et quelques projets en production, résumés dans une courte vidéo.'
+            : 'My background, how I work and a few projects in production, summed up in a short video.'}
+        </p>
+      </header>
+      <VideoIntro lang={lang} id="UBUzwtlQ65Q" title="Mario, développeur full-stack" />
     </div>
   </section>
 
