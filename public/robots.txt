@@ -1,4 +1,26 @@
 User-agent: *
 Allow: /
 
+# Les captures de projets ne doivent pas servir de miniature dans Google :
+# la miniature doit être la photo de Mario (moi-front).
+User-agent: Googlebot-Image
+Disallow: /*.png$
+Disallow: /tracify.webp
+Disallow: /luxury.webp
+Disallow: /kpopshop.netlify.webp
+Disallow: /scale.webp
+Disallow: /nexuslaab.webp
+Disallow: /allstone-mada.webp
+Disallow: /avenywork.webp
+Disallow: /ratiarybusiness.webp
+Disallow: /riseplatform.webp
+Disallow: /madagiascar.webp
+Disallow: /ecoi.webp
+Disallow: /video-presentation.jpg
+Disallow: /partage.jpg
+Disallow: /moi-detoure.webp
+Allow: /moi-front.jpg
+Allow: /moi-front.webp
+Allow: /mario-ratiarivony.jpg
+
 Sitemap: https://marioportfoliio.netlify.app/sitemap.xml
